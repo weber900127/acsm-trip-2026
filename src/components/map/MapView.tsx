@@ -38,10 +38,39 @@ const BoundsUpdater: React.FC<{ coords: [number, number][] }> = ({ coords }) => 
     return null;
 };
 
+import { generateGeodesicCurve, getDistance } from '../../utils/geodesic';
+
+// ... imports
+
 export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[300px] w-full rounded-xl overflow-hidden" }) => {
     // Filter activities with coordinates
     const validActivities = activities.filter(a => a.coordinates);
-    const coordinates = validActivities.map(a => [a.coordinates!.lat, a.coordinates!.lng] as [number, number]);
+
+    // Calculate path coordinates with geodesic curves for long distances
+    const pathCoordinates: [number, number][] = [];
+    if (validActivities.length > 0) {
+        const first = validActivities[0].coordinates!;
+        pathCoordinates.push([first.lat, first.lng]);
+
+        for (let i = 0; i < validActivities.length - 1; i++) {
+            const start = validActivities[i].coordinates!;
+            const end = validActivities[i + 1].coordinates!;
+
+            const dist = getDistance(start.lat, start.lng, end.lat, end.lng);
+
+            // Use geodesic curve for distances > 500km
+            if (dist > 500) {
+                const curve = generateGeodesicCurve(
+                    [start.lat, start.lng],
+                    [end.lat, end.lng]
+                );
+                // Skip the first point as it's already in the array
+                pathCoordinates.push(...curve.slice(1));
+            } else {
+                pathCoordinates.push([end.lat, end.lng]);
+            }
+        }
+    }
 
     if (validActivities.length === 0) {
         return (
@@ -53,8 +82,8 @@ export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[30
     }
 
     // Calculate center (default to first point or SF)
-    const center: [number, number] = coordinates.length > 0
-        ? coordinates[0]
+    const center: [number, number] = validActivities.length > 0
+        ? [validActivities[0].coordinates!.lat, validActivities[0].coordinates!.lng]
         : [37.7749, -122.4194];
 
     return (
@@ -94,9 +123,9 @@ export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[30
                     </Marker>
                 ))}
 
-                {coordinates.length > 1 && (
+                {pathCoordinates.length > 1 && (
                     <Polyline
-                        positions={coordinates}
+                        positions={pathCoordinates}
                         color="#4f46e5"
                         weight={3}
                         opacity={0.7}
@@ -104,7 +133,7 @@ export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[30
                     />
                 )}
 
-                <BoundsUpdater coords={coordinates} />
+                <BoundsUpdater coords={pathCoordinates} />
             </MapContainer>
         </div>
     );

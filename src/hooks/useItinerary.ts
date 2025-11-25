@@ -7,14 +7,17 @@ export function useItinerary() {
     const [itinerary, setItinerary] = useState<DayPlan[]>(defaultData);
     const [loading, setLoading] = useState(true);
 
+    // Use different document for dev vs prod to prevent overwriting production data
+    const DOC_ID = import.meta.env.DEV ? "dev" : "main";
+
     // Subscribe to Firestore updates
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, "trips", "main"), (docSnap) => {
+        const unsub = onSnapshot(doc(db, "trips", DOC_ID), (docSnap) => {
             if (docSnap.exists()) {
                 setItinerary(docSnap.data().days as DayPlan[]);
             } else {
                 // First time initialization: upload default data
-                setDoc(doc(db, "trips", "main"), { days: defaultData });
+                setDoc(doc(db, "trips", DOC_ID), { days: defaultData });
             }
             setLoading(false);
         }, (error) => {
@@ -28,7 +31,7 @@ export function useItinerary() {
     // Helper to save changes to Firestore
     const saveToFirestore = async (newItinerary: DayPlan[]) => {
         try {
-            await setDoc(doc(db, "trips", "main"), { days: newItinerary });
+            await setDoc(doc(db, "trips", DOC_ID), { days: newItinerary });
         } catch (error) {
             console.error("Error saving to Firestore:", error);
             alert("儲存失敗，請檢查網路連線");
