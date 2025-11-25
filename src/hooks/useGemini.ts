@@ -27,7 +27,9 @@ export function useGemini() {
             setMessages(prev => [...prev, newUserMsg]);
 
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const modelName = "gemini-pro";
+            console.log("Using Gemini Model:", modelName);
+            const model = genAI.getGenerativeModel({ model: modelName });
 
             // Construct system prompt with itinerary context
             const systemPrompt = `
