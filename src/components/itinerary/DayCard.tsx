@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Clock, MapPin, MoreVertical, Plus, GripVertical, Map as MapIcon, List } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown, MoreVertical, Plus, Map as MapIcon, List } from 'lucide-react';
 import { DayPlan, Activity } from '../../data/itinerary';
 import ActivityItem from './ActivityItem';
 import { MapView } from '../map/MapView';
@@ -26,18 +26,6 @@ export default function DayCard({
 }: DayCardProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showMap, setShowMap] = useState(false);
-
-    const totalCost = day.activities.reduce((sum, act) => sum + (act.cost || 0), 0);
-
-    const getCityColor = (city: string) => {
-        switch (city) {
-            case 'SF': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'SLC': return 'bg-purple-100 text-purple-800 border-purple-200';
-            case 'SAN': return 'bg-orange-100 text-orange-800 border-orange-200';
-            case 'LA': return 'bg-slate-100 text-slate-800 border-slate-200';
-            default: return 'bg-gray-100 text-gray-800';
-        }
-    };
 
     const getHeaderBorder = (city: string) => {
         switch (city) {
