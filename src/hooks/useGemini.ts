@@ -27,9 +27,14 @@ export function useGemini() {
             setMessages(prev => [...prev, newUserMsg]);
 
             const genAI = new GoogleGenerativeAI(apiKey);
-            const modelName = "gemini-pro";
+            const modelName = "gemini-1.5-flash";
             console.log("Using Gemini Model:", modelName);
             const model = genAI.getGenerativeModel({ model: modelName });
+
+            // Debug: List available models
+            // Note: listModels is not directly available on the client SDK instance in the same way.
+            // We will stick to trying the most standard model 'gemini-1.5-flash' which SHOULD exist.
+            // If this fails, it's likely an API Key issue or Region issue.
 
             // Construct system prompt with itinerary context
             const systemPrompt = `
