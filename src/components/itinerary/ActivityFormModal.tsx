@@ -4,6 +4,7 @@ import { Activity, ActivityType, Attachment, DayPlan } from '../../data/itinerar
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../lib/firebase';
+import { parseCoordinatesFromUrl } from '../../utils/googleMapsParser';
 
 interface ActivityFormModalProps {
     isOpen: boolean;
@@ -285,8 +286,29 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
+                                        <div className="col-span-2">
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">座標 (Coordinates)</label>
+                                            <div className="flex gap-2 mb-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="貼上 Google Maps 連結自動抓取..."
+                                                    className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                                                    onChange={e => {
+                                                        const coords = parseCoordinatesFromUrl(e.target.value);
+                                                        if (coords) {
+                                                            setFormData({
+                                                                ...formData,
+                                                                coordinates: coords
+                                                            });
+                                                            e.target.value = ''; // Clear input after successful parse
+                                                            // Optional: Show a toast or small success indicator
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">緯度 (Lat) (選填)</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">緯度 (Lat)</label>
                                             <input
                                                 type="number"
                                                 step="any"
@@ -306,7 +328,7 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">經度 (Lng) (選填)</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">經度 (Lng)</label>
                                             <input
                                                 type="number"
                                                 step="any"
