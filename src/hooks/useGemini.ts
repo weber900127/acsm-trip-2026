@@ -27,9 +27,7 @@ export function useGemini() {
             setMessages(prev => [...prev, newUserMsg]);
 
             const genAI = new GoogleGenerativeAI(apiKey);
-            const modelName = "gemini-1.5-flash";
-            console.log("Using Gemini Model:", modelName);
-            const model = genAI.getGenerativeModel({ model: modelName });
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
             // Debug: List available models
             // Note: listModels is not directly available on the client SDK instance in the same way.
