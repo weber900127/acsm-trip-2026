@@ -4,6 +4,7 @@ import DayCard from './components/itinerary/DayCard';
 import TripChecklist from './components/checklist/TripChecklist';
 import ActivityFormModal from './components/itinerary/ActivityFormModal';
 import WalletModal from './components/wallet/WalletModal';
+import AIChatWidget from './components/ai/AIChatWidget';
 import WeatherCard from './components/weather/WeatherCard';
 import AdminManager from './components/auth/AdminManager';
 import { useItinerary } from './hooks/useItinerary';
@@ -231,6 +232,7 @@ function App() {
 
             </main>
 
+            {/* Modals */}
             <ActivityFormModal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -248,10 +250,13 @@ function App() {
                 onClose={() => setIsWalletOpen(false)}
                 items={walletItems}
                 onAdd={addWalletItem}
-                onUpdate={updateWalletItem}
                 onRemove={removeWalletItem}
+                onUpdate={updateWalletItem}
                 totalCost={totalTripCost}
             />
+
+            {/* AI Assistant */}
+            <AIChatWidget itinerary={itinerary} />
 
             <AdminManager
                 isOpen={isAdminManagerOpen}
