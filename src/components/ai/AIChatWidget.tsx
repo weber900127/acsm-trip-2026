@@ -106,12 +106,35 @@ export default function AIChatWidget({ itinerary }: AIChatWidgetProps) {
                                     value={apiKey}
                                     onChange={e => setApiKey(e.target.value)}
                                 />
-                                <button
-                                    onClick={() => handleSaveKey(apiKey)}
-                                    className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700"
-                                >
-                                    儲存並開始
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleSaveKey(apiKey)}
+                                        className="flex-1 bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700"
+                                    >
+                                        儲存並開始
+                                    </button>
+                                    <button
+                                        onClick={async () => {
+                                            if (!apiKey) return alert('請先輸入 API Key');
+                                            try {
+                                                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+                                                const data = await res.json();
+                                                if (data.error) {
+                                                    alert(`錯誤: ${data.error.message}`);
+                                                } else {
+                                                    const modelNames = data.models?.map((m: any) => m.name) || [];
+                                                    alert(`連線成功！可用模型:\n${modelNames.join('\n')}`);
+                                                    console.log('Available models:', data);
+                                                }
+                                            } catch (e: any) {
+                                                alert(`連線失敗: ${e.message}`);
+                                            }
+                                        }}
+                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300"
+                                    >
+                                        測試連線
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <>
@@ -132,8 +155,8 @@ export default function AIChatWidget({ itinerary }: AIChatWidgetProps) {
                                         >
                                             <div
                                                 className={`max-w-[85%] p-3 rounded-2xl text-sm whitespace-pre-wrap ${msg.role === 'user'
-                                                        ? 'bg-indigo-600 text-white rounded-br-none'
-                                                        : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'
+                                                    ? 'bg-indigo-600 text-white rounded-br-none'
+                                                    : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'
                                                     }`}
                                             >
                                                 {msg.text}
