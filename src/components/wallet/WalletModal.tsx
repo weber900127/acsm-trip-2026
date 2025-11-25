@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2, CreditCard, Plane, Hotel, Ticket, Shield, MoreHorizontal } from 'lucide-react';
+import { X, Plus, Trash2, CreditCard, Plane, Hotel, Ticket, Shield, MoreHorizontal, Edit2, Utensils, Train, ShoppingBag, Music } from 'lucide-react';
 import { WalletItem, WalletCategory } from '../../hooks/useWallet';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,6 +8,7 @@ interface WalletModalProps {
     onClose: () => void;
     items: WalletItem[];
     onAdd: (item: Omit<WalletItem, 'id'>) => void;
+    onUpdate: (id: string, item: Omit<WalletItem, 'id'>) => void;
     onRemove: (id: string) => void;
     totalCost: number;
 }
@@ -17,6 +18,10 @@ const CATEGORY_ICONS: Record<WalletCategory, any> = {
     hotel: Hotel,
     ticket: Ticket,
     insurance: Shield,
+    food: Utensils,
+    transport: Train,
+    shopping: ShoppingBag,
+    entertainment: Music,
     other: MoreHorizontal
 };
 
@@ -25,12 +30,17 @@ const CATEGORY_LABELS: Record<WalletCategory, string> = {
     hotel: '住宿',
     ticket: '票券',
     insurance: '保險',
+    food: '飲食',
+    transport: '交通',
+    shopping: '購物',
+    entertainment: '娛樂',
     other: '其他'
 };
 
-export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, totalCost }: WalletModalProps) {
+export default function WalletModal({ isOpen, onClose, items, onAdd, onUpdate, onRemove, totalCost }: WalletModalProps) {
     const [isAdding, setIsAdding] = useState(false);
-    const [newItem, setNewItem] = useState<Omit<WalletItem, 'id'>>({
+    const [editingItemId, setEditingItemId] = useState<string | null>(null);
+    const [formData, setFormData] = useState<Omit<WalletItem, 'id'>>({
         category: 'other',
         title: '',
         reference: '',
@@ -40,15 +50,43 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onAdd(newItem);
-        setNewItem({
+        if (editingItemId) {
+            onUpdate(editingItemId, formData);
+            setEditingItemId(null);
+        } else {
+            onAdd(formData);
+            setIsAdding(false);
+        }
+        setFormData({
             category: 'other',
             title: '',
             reference: '',
             details: '',
             cost: 0
         });
+    };
+
+    const handleEdit = (item: WalletItem) => {
+        setFormData({
+            category: item.category,
+            title: item.title,
+            reference: item.reference,
+            details: item.details,
+            cost: item.cost
+        });
+        setEditingItemId(item.id);
         setIsAdding(false);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingItemId(null);
+        setFormData({
+            category: 'other',
+            title: '',
+            reference: '',
+            details: '',
+            cost: 0
+        });
     };
 
     return (
@@ -94,11 +132,17 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
 
                             {/* Content */}
                             <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
-                                {isAdding ? (
+                                {(isAdding || editingItemId) ? (
                                     <form onSubmit={handleSubmit} className="bg-white p-4 rounded-xl shadow-sm border space-y-4">
                                         <div className="flex justify-between items-center mb-2">
-                                            <h3 className="font-bold text-gray-800">新增項目</h3>
-                                            <button type="button" onClick={() => setIsAdding(false)} className="text-sm text-gray-500 hover:text-gray-700">取消</button>
+                                            <h3 className="font-bold text-gray-800">{editingItemId ? '編輯項目' : '新增項目'}</h3>
+                                            <button
+                                                type="button"
+                                                onClick={() => editingItemId ? handleCancelEdit() : setIsAdding(false)}
+                                                className="text-sm text-gray-500 hover:text-gray-700"
+                                            >
+                                                取消
+                                            </button>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4">
@@ -106,8 +150,8 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                 <label className="block text-xs font-medium text-gray-500 mb-1">類別</label>
                                                 <select
                                                     className="w-full p-2 border rounded-lg"
-                                                    value={newItem.category}
-                                                    onChange={e => setNewItem({ ...newItem, category: e.target.value as WalletCategory })}
+                                                    value={formData.category}
+                                                    onChange={e => setFormData({ ...formData, category: e.target.value as WalletCategory })}
                                                 >
                                                     {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                                                         <option key={key} value={key}>{label}</option>
@@ -119,8 +163,8 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                 <input
                                                     type="number"
                                                     className="w-full p-2 border rounded-lg"
-                                                    value={newItem.cost}
-                                                    onChange={e => setNewItem({ ...newItem, cost: Number(e.target.value) })}
+                                                    value={formData.cost}
+                                                    onChange={e => setFormData({ ...formData, cost: Number(e.target.value) })}
                                                 />
                                             </div>
                                         </div>
@@ -131,8 +175,8 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                 required
                                                 type="text"
                                                 className="w-full p-2 border rounded-lg"
-                                                value={newItem.title}
-                                                onChange={e => setNewItem({ ...newItem, title: e.target.value })}
+                                                value={formData.title}
+                                                onChange={e => setFormData({ ...formData, title: e.target.value })}
                                             />
                                         </div>
 
@@ -142,8 +186,8 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                 <input
                                                     type="text"
                                                     className="w-full p-2 border rounded-lg"
-                                                    value={newItem.reference}
-                                                    onChange={e => setNewItem({ ...newItem, reference: e.target.value })}
+                                                    value={formData.reference}
+                                                    onChange={e => setFormData({ ...formData, reference: e.target.value })}
                                                 />
                                             </div>
                                             <div>
@@ -151,14 +195,14 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                 <input
                                                     type="text"
                                                     className="w-full p-2 border rounded-lg"
-                                                    value={newItem.details}
-                                                    onChange={e => setNewItem({ ...newItem, details: e.target.value })}
+                                                    value={formData.details}
+                                                    onChange={e => setFormData({ ...formData, details: e.target.value })}
                                                 />
                                             </div>
                                         </div>
 
                                         <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-medium">
-                                            儲存
+                                            {editingItemId ? '更新' : '儲存'}
                                         </button>
                                     </form>
                                 ) : (
@@ -189,12 +233,22 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onRemove, t
                                                     <div className="text-sm text-indigo-600 font-mono mt-0.5">{item.reference}</div>
                                                     <div className="text-sm text-gray-500 mt-1">{item.details}</div>
                                                 </div>
-                                                <button
-                                                    onClick={() => onRemove(item.id)}
-                                                    className="p-2 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
+                                                <div className="flex gap-1">
+                                                    <button
+                                                        onClick={() => handleEdit(item)}
+                                                        className="p-2 text-gray-300 hover:text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        title="編輯"
+                                                    >
+                                                        <Edit2 size={18} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => onRemove(item.id)}
+                                                        className="p-2 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        title="刪除"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         );
                                     })}

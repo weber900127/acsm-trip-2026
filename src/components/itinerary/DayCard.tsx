@@ -1,7 +1,8 @@
-import { ChevronDown, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Clock, MapPin, MoreVertical, Plus, GripVertical, Map as MapIcon, List } from 'lucide-react';
 import { DayPlan, Activity } from '../../data/itinerary';
 import ActivityItem from './ActivityItem';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MapView } from '../map/MapView';
 import clsx from 'clsx';
 
 interface DayCardProps {
@@ -12,7 +13,6 @@ interface DayCardProps {
     onAddActivity?: () => void;
     onUpdateActivity?: (index: number, activity: Activity) => void;
     onRemoveActivity?: (index: number) => void;
-    onReorderActivity?: (index: number, direction: 'up' | 'down') => void;
 }
 
 export default function DayCard({
@@ -22,9 +22,13 @@ export default function DayCard({
     isEditing,
     onAddActivity,
     onUpdateActivity,
-    onRemoveActivity,
-    onReorderActivity
+    onRemoveActivity
 }: DayCardProps) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showMap, setShowMap] = useState(false);
+
+    const totalCost = day.activities.reduce((sum, act) => sum + (act.cost || 0), 0);
+
     const getCityColor = (city: string) => {
         switch (city) {
             case 'SF': return 'bg-blue-100 text-blue-800 border-blue-200';
@@ -46,9 +50,7 @@ export default function DayCard({
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+        <div
             className={clsx(
                 "bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-300 border-l-4",
                 getHeaderBorder(day.city),
@@ -62,9 +64,30 @@ export default function DayCard({
             >
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className={clsx("text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider", getCityColor(day.city))}>
+                        <span className="text-sm font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
                             {day.cityLabel}
                         </span>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMap(!showMap);
+                            }}
+                            className={`p-1.5 rounded-full transition-colors ${showMap ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-gray-100 text-gray-400'}`}
+                            title={showMap ? "切換列表模式" : "切換地圖模式"}
+                        >
+                            {showMap ? <List size={20} /> : <MapIcon size={20} />}
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                // Placeholder for menu toggle
+                                setIsMenuOpen(!isMenuOpen);
+                            }}
+                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
+                            title="更多選項"
+                        >
+                            <MoreVertical size={20} />
+                        </button>
                         <span className="text-sm text-gray-500 font-mono font-medium">{day.date}</span>
                     </div>
                     <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
@@ -78,16 +101,12 @@ export default function DayCard({
             </div>
 
             {/* Day Details (Collapsible) */}
-            <AnimatePresence>
-                {isExpanded && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                    >
-                        <div className="bg-gray-50/50 border-t border-gray-100 p-5">
+            {isExpanded && (
+                <div className="border-t border-gray-100">
+                    <div className="bg-gray-50/50 p-5">
+                        {showMap ? (
+                            <MapView activities={day.activities} />
+                        ) : (
                             <div className="space-y-2">
                                 {day.activities.map((activity, idx) => (
                                     <ActivityItem
@@ -97,25 +116,23 @@ export default function DayCard({
                                         isEditing={isEditing}
                                         onEdit={() => onUpdateActivity?.(idx, activity)}
                                         onDelete={() => onRemoveActivity?.(idx)}
-                                        onMoveUp={() => onReorderActivity?.(idx, 'up')}
-                                        onMoveDown={() => onReorderActivity?.(idx, 'down')}
                                     />
                                 ))}
                             </div>
+                        )}
 
-                            {isEditing && (
-                                <button
-                                    onClick={onAddActivity}
-                                    className="mt-4 w-full py-2 border-2 border-dashed border-indigo-200 rounded-lg text-indigo-500 font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Plus size={18} />
-                                    新增行程
-                                </button>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.div>
+                        {isEditing && (
+                            <button
+                                onClick={onAddActivity}
+                                className="mt-4 w-full py-2 border-2 border-dashed border-indigo-200 rounded-lg text-indigo-500 font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <Plus size={18} />
+                                新增行程
+                            </button>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }

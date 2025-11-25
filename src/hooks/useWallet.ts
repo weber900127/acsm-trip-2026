@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
-export type WalletCategory = 'flight' | 'hotel' | 'ticket' | 'insurance' | 'other';
+export type WalletCategory = 'flight' | 'hotel' | 'ticket' | 'insurance' | 'food' | 'transport' | 'shopping' | 'entertainment' | 'other';
 
 export interface WalletItem {
     id: string;
@@ -67,6 +67,7 @@ export function useWallet() {
         const newItem = { ...item, id: crypto.randomUUID() };
         const newItems = [...walletItems, newItem];
         saveToFirestore(newItems);
+        return newItem.id;
     };
 
     const removeWalletItem = (id: string) => {

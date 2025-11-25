@@ -1,6 +1,7 @@
 import {
-    MapPin, Info, Pencil, Trash2, ArrowUp, ArrowDown,
-    Plane, Coffee, Camera, Train, Car, Sun, Moon, Briefcase, Utensils, CheckSquare
+    MapPin, Info, Pencil, Trash2,
+    Plane, Coffee, Camera, Train, Car, Sun, Moon, Briefcase, Utensils, CheckSquare,
+    Link as LinkIcon
 } from 'lucide-react';
 import { Activity } from '../../data/itinerary';
 import { motion } from 'framer-motion';
@@ -13,8 +14,6 @@ interface ActivityItemProps {
     isEditing?: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
-    onMoveUp?: () => void;
-    onMoveDown?: () => void;
 }
 
 export default function ActivityItem({
@@ -22,9 +21,7 @@ export default function ActivityItem({
     isLast,
     isEditing,
     onEdit,
-    onDelete,
-    onMoveUp,
-    onMoveDown
+    onDelete
 }: ActivityItemProps) {
     const getIcon = (name?: string) => {
         switch (name) {
@@ -77,12 +74,6 @@ export default function ActivityItem({
 
                     {isEditing && (
                         <div className="flex items-center gap-1 ml-2">
-                            <button onClick={onMoveUp} className="p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded" title="上移">
-                                <ArrowUp size={14} />
-                            </button>
-                            <button onClick={onMoveDown} className="p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded" title="下移">
-                                <ArrowDown size={14} />
-                            </button>
                             <button onClick={onEdit} className="p-1 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded" title="編輯">
                                 <Pencil size={14} />
                             </button>
@@ -96,6 +87,37 @@ export default function ActivityItem({
                     {activity.description}
                 </p>
 
+                {/* Attachments */}
+                {activity.attachments && activity.attachments.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        {activity.attachments.map(att => (
+                            att.type === 'image' ? (
+                                <a
+                                    key={att.id}
+                                    href={att.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block w-24 h-24 rounded-lg overflow-hidden border border-gray-200 hover:border-indigo-300 transition-colors relative group/img"
+                                >
+                                    <img src={att.url} alt={att.label} className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-colors" />
+                                </a>
+                            ) : (
+                                <a
+                                    key={att.id}
+                                    href={att.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 px-2.5 py-1.5 rounded-md border border-blue-100 hover:bg-blue-100 transition-colors"
+                                >
+                                    <LinkIcon size={12} />
+                                    {att.label || '連結'}
+                                </a>
+                            )
+                        ))}
+                    </div>
+                )}
+
                 {/* Tags/Tips */}
                 {(activity.tips || activity.location) && (
                     <div className="mt-3 flex flex-col gap-2">
@@ -108,25 +130,30 @@ export default function ActivityItem({
                             >
                                 <MapPin size={12} />
                                 {activity.location}
-                            </a>
+                            </a >
                         )}
-                        {activity.tips && (
-                            <div className="flex items-start gap-2 text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-md border border-amber-100">
-                                <Info size={14} className="mt-0.5 flex-shrink-0 text-amber-500" />
-                                <span className="leading-relaxed">{activity.tips}</span>
-                            </div>
-                        )}
-                    </div>
+                        {
+                            activity.tips && (
+                                <div className="flex items-start gap-2 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-100">
+                                    <Info size={14} className="mt-0.5 flex-shrink-0" />
+                                    <span className="leading-relaxed">{activity.tips}</span>
+                                </div>
+                            )
+                        }
+                    </div >
                 )}
 
-                {/* Edit History */}
-                {activity.modifiedBy && (
-                    <div className="mt-2 flex items-center gap-1 text-[10px] text-gray-300 justify-end">
-                        <Info size={10} />
-                        <span>{activity.modifiedBy} 於 {activity.modifiedAt ? formatDistanceToNow(new Date(activity.modifiedAt), { addSuffix: true, locale: zhTW }) : '剛剛'} 更新</span>
-                    </div>
-                )}
-            </div>
-        </motion.div>
+                {/* Metadata */}
+                {
+                    activity.modifiedBy && (
+                        <div className="mt-2 flex justify-end">
+                            <span className="text-[10px] text-gray-300">
+                                Updated by {activity.modifiedBy.split('@')[0]} • {activity.modifiedAt ? formatDistanceToNow(new Date(activity.modifiedAt), { addSuffix: true, locale: zhTW }) : ''}
+                            </span>
+                        </div>
+                    )
+                }
+            </div >
+        </motion.div >
     );
 }

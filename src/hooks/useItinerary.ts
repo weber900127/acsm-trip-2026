@@ -35,10 +35,21 @@ export function useItinerary() {
         }
     };
 
+    // Helper to sort activities by time
+    const sortActivities = (activities: Activity[]) => {
+        return [...activities].sort((a, b) => {
+            // Extract HH:mm from "HH:mm (TZ)" or just "HH:mm"
+            const timeA = a.time.split(' ')[0];
+            const timeB = b.time.split(' ')[0];
+            return timeA.localeCompare(timeB);
+        });
+    };
+
     const addActivity = (dayId: string, activity: Activity) => {
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
-                return { ...day, activities: [...day.activities, activity] };
+                const newActivities = [...day.activities, activity];
+                return { ...day, activities: sortActivities(newActivities) };
             }
             return day;
         });
@@ -62,27 +73,37 @@ export function useItinerary() {
             if (day.id === dayId) {
                 const newActivities = [...day.activities];
                 newActivities[index] = updatedActivity;
-                return { ...day, activities: newActivities };
+                return { ...day, activities: sortActivities(newActivities) };
             }
             return day;
         });
         saveToFirestore(newItinerary);
     };
 
-    const reorderActivity = (dayId: string, index: number, direction: 'up' | 'down') => {
+    const moveActivity = (fromDayId: string, toDayId: string, activity: Activity, index?: number) => {
         const newItinerary = itinerary.map(day => {
-            if (day.id === dayId) {
+            if (day.id === fromDayId) {
+                // Remove from source
                 const newActivities = [...day.activities];
-                if (direction === 'up' && index > 0) {
-                    [newActivities[index - 1], newActivities[index]] = [newActivities[index], newActivities[index - 1]];
-                } else if (direction === 'down' && index < newActivities.length - 1) {
-                    [newActivities[index + 1], newActivities[index]] = [newActivities[index], newActivities[index + 1]];
+                // If index is provided, remove at index. If not (adding new), nothing to remove.
+                if (typeof index === 'number') {
+                    newActivities.splice(index, 1);
                 }
                 return { ...day, activities: newActivities };
+            }
+            if (day.id === toDayId) {
+                // Add to destination
+                const newActivities = [...day.activities, activity];
+                return { ...day, activities: sortActivities(newActivities) };
             }
             return day;
         });
         saveToFirestore(newItinerary);
+    };
+
+    // Deprecated - kept for backwards compatibility but does nothing (auto-sorting is now enforced)
+    const reorderActivity = (_dayId: string, _index: number, _direction: 'up' | 'down') => {
+        console.warn('reorderActivity is deprecated. Activities are now automatically sorted by time.');
     };
 
     const resetItinerary = () => {
@@ -131,6 +152,7 @@ export function useItinerary() {
         removeActivity,
         updateActivity,
         reorderActivity,
+        moveActivity,
         resetItinerary,
         exportItinerary,
         importItinerary

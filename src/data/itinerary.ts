@@ -4,6 +4,13 @@
 // --- Types ---
 export type ActivityType = 'flight' | 'transport' | 'food' | 'sightseeing' | 'hotel' | 'conference' | 'other';
 
+export interface Attachment {
+    id: string;
+    type: 'image' | 'link';
+    url: string;
+    label?: string;
+}
+
 export interface Activity {
     time: string;
     title: string;
@@ -15,6 +22,12 @@ export interface Activity {
     cost?: number;
     modifiedBy?: string;
     modifiedAt?: string;
+    attachments?: Attachment[];
+    walletItemId?: string;
+    coordinates?: {
+        lat: number;
+        lng: number;
+    };
 }
 
 export interface DayPlan {
@@ -44,7 +57,7 @@ export const itineraryData: DayPlan[] = [
                 description: '前往桃園機場第二航廈，星宇航空櫃檯辦理登機。',
                 type: 'flight',
                 iconName: 'Plane',
-                tips: '建議預先線上選位。檢查護照與 ESTA 是否備妥。'
+                coordinates: { lat: 25.0797, lng: 121.2342 }
             },
             {
                 time: '16:30 (TPE)',
@@ -59,7 +72,8 @@ export const itineraryData: DayPlan[] = [
                 description: '辦理入境手續、領取行李。',
                 type: 'transport',
                 iconName: 'MapPin',
-                tips: '美西入境排隊時間較長，預留 1.5-2 小時。'
+                tips: '美西入境排隊時間較長，預留 1.5-2 小時。',
+                coordinates: { lat: 37.6213, lng: -122.3790 }
             },
             {
                 time: '14:30',
@@ -82,7 +96,8 @@ export const itineraryData: DayPlan[] = [
                 description: '前往 Ferry Building Marketplace 覓食，欣賞海灣大橋夜景。',
                 type: 'food',
                 iconName: 'Utensils',
-                location: '1 Ferry Building, San Francisco'
+                location: '1 Ferry Building, San Francisco',
+                coordinates: { lat: 37.7955, lng: -122.3937 }
             }
         ]
     },
@@ -109,7 +124,8 @@ export const itineraryData: DayPlan[] = [
                 type: 'sightseeing',
                 iconName: 'MapPin',
                 location: '10600 N Tantau Ave, Cupertino',
-                tips: '必買獨家 T-shirt。頂樓露台是唯一能清楚看到圓環建築的地方。'
+                tips: '必買獨家 T-shirt。頂樓露台是唯一能清楚看到圓環建築的地方。',
+                coordinates: { lat: 37.3349, lng: -122.0090 }
             },
             {
                 time: '12:30',
@@ -124,7 +140,8 @@ export const itineraryData: DayPlan[] = [
                 description: '前往 Mountain View 參觀 Google 園區外部與訪客中心。',
                 type: 'sightseeing',
                 iconName: 'Camera',
-                location: '1600 Amphitheatre Pkwy, Mountain View'
+                location: '1600 Amphitheatre Pkwy, Mountain View',
+                coordinates: { lat: 37.4220, lng: -122.0841 }
             },
             {
                 time: '16:00',
@@ -132,7 +149,8 @@ export const itineraryData: DayPlan[] = [
                 description: '參觀 Main Quad、Hoover Tower 與紀念教堂。',
                 type: 'sightseeing',
                 iconName: 'Briefcase',
-                tips: '校園很大，建議將車停在 Tresidder Parking Lot。'
+                tips: '校園很大，建議將車停在 Tresidder Parking Lot。',
+                coordinates: { lat: 37.4275, lng: -122.1697 }
             },
             {
                 time: '19:00',
@@ -157,14 +175,16 @@ export const itineraryData: DayPlan[] = [
                 description: '前往 Welcome Center，或租腳踏車騎行一段。',
                 type: 'sightseeing',
                 iconName: 'Camera',
-                tips: '若想拍明信片角度，建議搭 Uber 到對岸的 Battery Spencer。'
+                tips: '若想拍明信片角度，建議搭 Uber 到對岸的 Battery Spencer。',
+                coordinates: { lat: 37.8199, lng: -122.4783 }
             },
             {
                 time: '11:30',
                 title: '藝術宮 (Palace of Fine Arts)',
                 description: '欣賞羅馬式建築與湖畔美景。',
                 type: 'sightseeing',
-                iconName: 'Camera'
+                iconName: 'Camera',
+                coordinates: { lat: 37.8029, lng: -122.4484 }
             },
             {
                 time: '14:00',
@@ -172,7 +192,8 @@ export const itineraryData: DayPlan[] = [
                 description: '觀賞繡球花盛開的彎曲街道。',
                 type: 'sightseeing',
                 iconName: 'MapPin',
-                tips: '建議搭 Uber 到頂端 (Hyde St)，往下走比較輕鬆。'
+                tips: '建議搭 Uber 到頂端 (Hyde St)，往下走比較輕鬆。',
+                coordinates: { lat: 37.8021, lng: -122.4187 }
             },
             {
                 time: '16:00',
@@ -197,14 +218,16 @@ export const itineraryData: DayPlan[] = [
                 description: '從 33 號碼頭搭船。需聽語音導覽。',
                 type: 'sightseeing',
                 iconName: 'MapPin',
-                tips: '【極重要】必須在 90 天前官網搶票，現場買不到票。'
+                tips: '【極重要】必須在 90 天前官網搶票，現場買不到票。',
+                coordinates: { lat: 37.8270, lng: -122.4230 }
             },
             {
                 time: '13:00',
                 title: '39 號碼頭 (Pier 39)',
                 description: '午餐吃 Boudin 酸種麵包湯，看懶洋洋的海獅。',
                 type: 'food',
-                iconName: 'Utensils'
+                iconName: 'Utensils',
+                coordinates: { lat: 37.8087, lng: -122.4098 }
             },
             {
                 time: '15:00',
@@ -235,7 +258,8 @@ export const itineraryData: DayPlan[] = [
                 title: 'Sausalito 小鎮時光',
                 description: '逛畫廊、吃冰淇淋，眺望舊金山天際線。',
                 type: 'sightseeing',
-                iconName: 'Sun'
+                iconName: 'Sun',
+                coordinates: { lat: 37.8591, lng: -122.4853 }
             },
             {
                 time: '14:00',
@@ -276,7 +300,8 @@ export const itineraryData: DayPlan[] = [
                 description: '搭乘 TRAX 輕軌 (綠線) 直接從機場到市中心。',
                 type: 'transport',
                 iconName: 'Train',
-                tips: '鹽湖城機場離市區很近，輕軌非常方便且便宜。'
+                tips: '鹽湖城機場離市區很近，輕軌非常方便且便宜。',
+                coordinates: { lat: 40.7899, lng: -111.9791 }
             },
             {
                 time: '17:00',
@@ -300,7 +325,8 @@ export const itineraryData: DayPlan[] = [
                 title: '會議報到',
                 description: '前往 Salt Palace Convention Center 領取識別證。',
                 type: 'conference',
-                iconName: 'Briefcase'
+                iconName: 'Briefcase',
+                coordinates: { lat: 40.7670, lng: -111.8965 }
             },
             {
                 time: '09:00',
@@ -353,7 +379,8 @@ export const itineraryData: DayPlan[] = [
                 description: '搭 Uber 前往 Utah State Capitol 看夕陽與市景。',
                 type: 'sightseeing',
                 iconName: 'Camera',
-                tips: '議會大廈位於山坡上，俯瞰鹽湖城視野極佳。'
+                tips: '議會大廈位於山坡上，俯瞰鹽湖城視野極佳。',
+                coordinates: { lat: 40.7774, lng: -111.8882 }
             }
         ]
     },
@@ -442,15 +469,17 @@ export const itineraryData: DayPlan[] = [
                 description: '機場就在市區旁。搭乘 Uber 或 992 公車前往飯店。',
                 type: 'transport',
                 iconName: 'MapPin',
-                tips: '建議住 Downtown 或 Little Italy 區域，交通方便。'
+                tips: '建議住 Downtown 或 Little Italy 區域，交通方便。',
+                coordinates: { lat: 32.7338, lng: -117.1933 }
             },
             {
                 time: '18:00',
                 title: 'Gaslamp Quarter',
                 description: '瓦斯燈街區晚餐與散步，感受復古建築與熱鬧酒吧。',
                 type: 'food',
-                iconName: 'Utensils'
-            }
+                iconName: 'Utensils',
+                coordinates: { lat: 32.7114, lng: -117.1599 }
+            },
         ]
     },
     {
@@ -468,7 +497,8 @@ export const itineraryData: DayPlan[] = [
                 type: 'sightseeing',
                 iconName: 'Camera',
                 location: '2920 Zoo Dr, San Diego',
-                tips: '園區有坡度，建議穿好走的鞋。'
+                tips: '園區有坡度，建議穿好走的鞋。',
+                coordinates: { lat: 32.7353, lng: -117.1490 }
             },
             {
                 time: '14:00',
@@ -500,7 +530,8 @@ export const itineraryData: DayPlan[] = [
                 description: '參觀退役航空母艦、戰機與甲板。',
                 type: 'sightseeing',
                 iconName: 'Briefcase',
-                tips: '門票包含語音導覽，記得領取。'
+                tips: '門票包含語音導覽，記得領取。',
+                coordinates: { lat: 32.7137, lng: -117.1751 }
             },
             {
                 time: '13:00',
@@ -563,14 +594,16 @@ export const itineraryData: DayPlan[] = [
                 description: '搭渡輪或過橋。參觀 Hotel del Coronado。',
                 type: 'sightseeing',
                 iconName: 'Sun',
-                tips: '飯店沙灘非常美，電影《有些喜歡熱》拍攝地。'
+                tips: '飯店沙灘非常美，電影《有些喜歡熱》拍攝地。',
+                coordinates: { lat: 32.6859, lng: -117.1831 }
             },
             {
                 time: '14:00',
                 title: 'Old Town San Diego',
                 description: '加州發源地，充滿墨西哥風情的歷史公園。',
                 type: 'sightseeing',
-                iconName: 'MapPin'
+                iconName: 'MapPin',
+                coordinates: { lat: 32.7549, lng: -117.1978 }
             },
             {
                 time: '18:00',
@@ -611,7 +644,8 @@ export const itineraryData: DayPlan[] = [
                 description: '前往 Tom Bradley 國際航廈 (TBIT) 星宇櫃檯。',
                 type: 'flight',
                 iconName: 'Plane',
-                tips: '還車後需搭接駁車至航廈，時間要抓寬鬆。'
+                tips: '還車後需搭接駁車至航廈，時間要抓寬鬆。',
+                coordinates: { lat: 33.9416, lng: -118.4085 }
             },
             {
                 time: '23:50',

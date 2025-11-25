@@ -5,12 +5,13 @@ import TripChecklist from './components/checklist/TripChecklist';
 import ActivityFormModal from './components/itinerary/ActivityFormModal';
 import WalletModal from './components/wallet/WalletModal';
 import WeatherCard from './components/weather/WeatherCard';
+import AdminManager from './components/auth/AdminManager';
 import { useItinerary } from './hooks/useItinerary';
 import { useWallet } from './hooks/useWallet';
 import { useAuth } from './hooks/useAuth';
 import { Activity } from './data/itinerary';
 import { CITY_WEATHER } from './data/weather';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 
 function App() {
@@ -18,22 +19,22 @@ function App() {
     const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>({ 'day1': true });
     const [isEditing, setIsEditing] = useState(false);
     const [isWalletOpen, setIsWalletOpen] = useState(false);
+    const [isAdminManagerOpen, setIsAdminManagerOpen] = useState(false);
 
     // Auth State
-    const { user, login, logout, loading: authLoading } = useAuth();
+    const { user, login, logout, loading: authLoading, isUserAdmin, adminList } = useAuth();
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingDayId, setEditingDayId] = useState<string | null>(null);
-    const [editingActivityIndex, setEditingActivityIndex] = useState<number | null>(null);
-    const [editingActivityData, setEditingActivityData] = useState<Activity | undefined>(undefined);
+
+    const [editingActivity, setEditingActivity] = useState<{ dayId: string, index: number, activity: Activity } | null>(null);
 
     const {
         itinerary,
         addActivity,
         updateActivity,
         removeActivity,
-        reorderActivity,
+        moveActivity,
         exportItinerary,
         importItinerary
     } = useItinerary();
@@ -41,6 +42,7 @@ function App() {
     const {
         walletItems,
         addWalletItem,
+        updateWalletItem,
         removeWalletItem,
         getTotalCost: getWalletCost
     } = useWallet();
@@ -63,35 +65,66 @@ function App() {
     const totalTripCost = totalItineraryCost + getWalletCost();
 
     // Handlers
-    const handleAddClick = (dayId: string) => {
-        setEditingDayId(dayId);
-        setEditingActivityIndex(null);
-        setEditingActivityData(undefined);
-        setIsModalOpen(true);
-    };
-
-    const handleEditClick = (dayId: string, index: number, activity: Activity) => {
-        setEditingDayId(dayId);
-        setEditingActivityIndex(index);
-        setEditingActivityData(activity);
-        setIsModalOpen(true);
-    };
-
-    const handleSaveActivity = (activity: Activity) => {
+    const handleSaveActivity = (activity: Activity, targetDayId: string, syncToWallet?: boolean) => {
         const activityWithUser = {
             ...activity,
-            modifiedBy: user?.displayName || user?.email || 'Anonymous',
+            modifiedBy: user?.displayName || 'Anonymous',
             modifiedAt: new Date().toISOString()
         };
 
-        if (editingDayId) {
-            if (editingActivityIndex !== null) {
-                updateActivity(editingDayId, editingActivityIndex, activityWithUser);
+        // Handle Wallet Sync
+        if (syncToWallet && (activity.cost || 0) > 0) {
+            let walletCategory: any = 'other';
+            switch (activity.type) {
+                case 'flight': walletCategory = 'flight'; break;
+                case 'transport': walletCategory = 'transport'; break;
+                case 'food': walletCategory = 'food'; break;
+                case 'hotel': walletCategory = 'hotel'; break;
+                case 'sightseeing': walletCategory = 'ticket'; break;
+                default: walletCategory = 'other';
+            }
+
+            const walletItemData = {
+                category: walletCategory,
+                title: activity.title,
+                reference: '',
+                details: `${activity.time}`,
+                cost: activity.cost
+            };
+
+            if (activity.walletItemId) {
+                updateWalletItem(activity.walletItemId, walletItemData);
             } else {
-                addActivity(editingDayId, activityWithUser);
+                const newWalletId = addWalletItem(walletItemData);
+                activityWithUser.walletItemId = newWalletId;
             }
         }
+
+        if (editingActivity) {
+            if (editingActivity.dayId === targetDayId) {
+                // Update in place
+                updateActivity(editingActivity.dayId, editingActivity.index, activityWithUser);
+            } else {
+                // Move to different day
+                moveActivity(editingActivity.dayId, targetDayId, activityWithUser, editingActivity.index);
+            }
+        } else {
+            // Add new
+            addActivity(targetDayId, activityWithUser);
+        }
         setIsModalOpen(false);
+        setEditingActivity(null);
+    };
+
+    const handleEditActivity = (dayId: string, index: number, activity: Activity) => {
+        setEditingActivity({ dayId, index, activity });
+        setIsModalOpen(true);
+    };
+
+    const handleDeleteActivity = (dayId: string, index: number) => {
+        if (confirm('確定要刪除這個行程嗎？')) {
+            removeActivity(dayId, index);
+        }
     };
 
     if (authLoading) {
@@ -106,7 +139,9 @@ function App() {
                 onExport={exportItinerary}
                 onImport={importItinerary}
                 onOpenWallet={() => setIsWalletOpen(true)}
+                onOpenSettings={() => setIsAdminManagerOpen(true)}
                 user={user}
+                isAdmin={isUserAdmin}
                 onLogin={login}
                 onLogout={logout}
             />
@@ -165,30 +200,22 @@ function App() {
                 ) : (
                     <>
                         {/* Itinerary List */}
-                        <div className="space-y-4">
-                            <AnimatePresence mode="popLayout">
-                                {filteredItinerary.map((day) => (
-                                    <motion.div
-                                        key={day.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <DayCard
-                                            day={day}
-                                            isExpanded={!!expandedDays[day.id]}
-                                            onToggle={() => toggleDay(day.id)}
-                                            isEditing={isEditing}
-                                            onAddActivity={() => handleAddClick(day.id)}
-                                            onUpdateActivity={(idx, act) => handleEditClick(day.id, idx, act)}
-                                            onRemoveActivity={(idx) => removeActivity(day.id, idx)}
-                                            onReorderActivity={(idx, dir) => reorderActivity(day.id, idx, dir)}
-                                        />
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
+                        <div className="space-y-6">
+                            {filteredItinerary.map((day) => (
+                                <DayCard
+                                    key={day.id}
+                                    day={day}
+                                    isExpanded={!!expandedDays[day.id]}
+                                    onToggle={() => toggleDay(day.id)}
+                                    isEditing={isEditing}
+                                    onAddActivity={() => {
+                                        setEditingActivity({ dayId: day.id, index: -1, activity: {} as Activity });
+                                        setIsModalOpen(true);
+                                    }}
+                                    onUpdateActivity={(index, activity) => handleEditActivity(day.id, index, activity)}
+                                    onRemoveActivity={(index) => handleDeleteActivity(day.id, index)}
+                                />
+                            ))}
                         </div>
 
                         {/* Checklist Section */}
@@ -206,9 +233,14 @@ function App() {
 
             <ActivityFormModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingActivity(null);
+                }}
                 onSave={handleSaveActivity}
-                initialData={editingActivityData}
+                initialData={editingActivity?.activity}
+                availableDays={itinerary}
+                currentDayId={editingActivity?.dayId || itinerary[0]?.id}
             />
 
             <WalletModal
@@ -216,8 +248,16 @@ function App() {
                 onClose={() => setIsWalletOpen(false)}
                 items={walletItems}
                 onAdd={addWalletItem}
+                onUpdate={updateWalletItem}
                 onRemove={removeWalletItem}
                 totalCost={totalTripCost}
+            />
+
+            <AdminManager
+                isOpen={isAdminManagerOpen}
+                onClose={() => setIsAdminManagerOpen(false)}
+                currentAdmins={adminList}
+                currentUserEmail={user?.email}
             />
         </div>
     );
