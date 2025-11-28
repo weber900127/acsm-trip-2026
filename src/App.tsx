@@ -133,9 +133,9 @@ function App() {
     }
 
     return (
-        <div className="min-h-screen bg-sunset-animated pb-12 font-sans text-gray-900 relative overflow-x-hidden">
-            {/* Background Overlay for better text contrast - Force Rebuild */}
-            <div className="fixed inset-0 bg-white/30 pointer-events-none z-0"></div>
+        <div className="min-h-screen pb-12 relative overflow-x-hidden">
+            {/* Paper Texture Overlay (Optional extra grain) */}
+            <div className="fixed inset-0 pointer-events-none z-0 opacity-50 mix-blend-multiply" style={{ backgroundImage: 'var(--paper-texture)' }}></div>
 
             <div className="relative z-10">
                 <Header

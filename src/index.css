@@ -3,77 +3,121 @@
 @tailwind utilities;
 
 :root {
-  --font-display: 'Outfit', sans-serif;
+  --font-heading: 'Playfair Display', serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
-  
-  /* California Sunset Palette */
-  --sunset-start: #FF9A9E;
-  --sunset-mid: #FECFEF;
-  --sunset-end: #9999db;
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --font-hand: 'Caveat', cursive;
+
+  /* Scrapbook Palette */
+  --paper-bg: #FDFBF7;
+  --paper-texture: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+
+  --ink-primary: #2C3E50;
+  --ink-secondary: #5D6D7E;
+
+  --tape-color: rgba(255, 255, 255, 0.4);
+  --shadow-hard: 4px 4px 0px rgba(0, 0, 0, 0.15);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 body {
   font-family: var(--font-body);
-  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Fallback */
+  background-color: var(--paper-bg);
+  background-image: var(--paper-texture);
   min-height: 100vh;
-  color: #2D3748;
+  color: var(--ink-primary);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
-/* Glassmorphism Utilities */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+.font-hand {
+  font-family: var(--font-hand);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: all 0.3s ease;
+/* Scrapbook Utilities */
+
+/* Polaroid Style */
+.polaroid-card {
+  background: white;
+  padding: 1rem;
+  padding-bottom: 3rem;
+  /* Space for caption */
+  box-shadow: var(--shadow-hard);
+  border: 1px solid #E5E7EB;
+  transform: rotate(-1deg);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.85);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+.polaroid-card:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Washi Tape Effect */
+.washi-tape {
+  position: absolute;
+  height: 24px;
+  width: 100px;
+  background-color: rgba(255, 223, 186, 0.6);
+  /* Peach tape */
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  z-index: 20;
+}
+
+.washi-tape::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0z' fill='%23fff' fill-opacity='0.2'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+/* Sticker Style */
+.sticker {
+  background: white;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  /* Or irregular shape */
+  transform: rotate(3deg);
+}
+
+/* Paper Note */
+.paper-note {
+  background: #fff9c4;
+  /* Post-it yellow */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  transform: rotate(1deg);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.5);
+  background: #D1D5DB;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.8);
-}
-
-/* Animated Background */
-.bg-sunset-animated {
-  background: linear-gradient(-45deg, #FF9A9E, #FECFEF, #e0c3fc, #8ec5fc);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-}
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  background: #9CA3AF;
 }

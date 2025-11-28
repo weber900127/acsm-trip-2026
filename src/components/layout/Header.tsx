@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { Plane, Calendar, Download, Upload, CreditCard, LogOut, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plane, Download, CreditCard, LogOut, Shield } from 'lucide-react';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { User } from 'firebase/auth';
 
@@ -16,9 +16,8 @@ interface HeaderProps {
     onLogout: () => void;
 }
 
-export default function Header({ isEditing, onToggleEdit, onExport, onImport, onOpenWallet, onOpenSettings, user, isAdmin, onLogin, onLogout }: HeaderProps) {
+export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, user, isAdmin, onLogin, onLogout }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
     const [endDate, setEndDate] = useState<Date>(new Date('2026-06-04T00:00:00'));
@@ -63,138 +62,101 @@ export default function Header({ isEditing, onToggleEdit, onExport, onImport, on
         return () => clearInterval(timer);
     }, [startDate]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && onImport) {
-            onImport(file);
-        }
-        // Reset input so same file can be selected again
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
+
 
     return (
-        <header className="relative pt-8 pb-16 px-4 overflow-hidden">
-            {/* Background Decorations */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
-                <Plane className="absolute top-10 right-10 w-24 h-24 rotate-12 text-indigo-900" />
-                <Calendar className="absolute bottom-4 left-10 w-32 h-32 -rotate-12 text-purple-900" />
-            </div>
+        <header className="relative pt-8 pb-12 px-4 overflow-hidden">
+            <div className="max-w-4xl mx-auto relative z-10">
+                {/* Ticket Container */}
+                <div className="bg-white p-6 md:p-8 shadow-lg transform rotate-1 border-2 border-gray-200 relative mx-4 md:mx-0" style={{ backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
+                    {/* Washi Tape Decoration */}
+                    <div className="washi-tape"></div>
 
-            <div className="max-w-3xl mx-auto relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-start gap-6 md:gap-0">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2 opacity-80">
-                            <span className="text-xs font-bold tracking-widest uppercase bg-white/40 px-2 py-1 rounded text-indigo-900">Trip Plan</span>
-                            <span className="text-xs text-indigo-900 font-medium">
-                                {startDate.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')} -
-                                {endDate.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}
-                            </span>
-                        </div>
-                        <h1 className="text-4xl font-bold mb-1 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 to-purple-900 drop-shadow-sm">ACSM Annual Meeting</h1>
-                        <div className="flex items-center gap-2 text-indigo-800 text-sm font-medium">
-                            <span>SF</span>
-                            <span className="w-1 h-1 bg-indigo-400 rounded-full"></span>
-                            <span>SLC</span>
-                            <span className="w-1 h-1 bg-indigo-400 rounded-full"></span>
-                            <span>SAN</span>
-                            <span className="w-1 h-1 bg-indigo-400 rounded-full"></span>
-                            <span>LA</span>
-                        </div>
-                    </div>
+                    {/* Ticket Perforation Line */}
+                    <div className="absolute left-0 right-0 top-1/2 border-b-2 border-dashed border-gray-300 -z-10 hidden md:block"></div>
+                    <div className="absolute -left-3 top-1/2 w-6 h-6 bg-[var(--paper-bg)] rounded-full -translate-y-1/2 hidden md:block shadow-inner"></div>
+                    <div className="absolute -right-3 top-1/2 w-6 h-6 bg-[var(--paper-bg)] rounded-full -translate-y-1/2 hidden md:block shadow-inner"></div>
 
-                    <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto">
-                        <div className="glass-panel rounded-xl p-3 text-center min-w-[120px]">
-                            <div className="text-[10px] uppercase tracking-widest font-bold text-indigo-900 mb-0.5">出發倒數</div>
-                            <div className="flex items-baseline justify-center gap-1 text-indigo-900">
-                                <span className="text-2xl font-bold">{timeLeft.days}</span>
-                                <span className="text-[10px] opacity-80">天</span>
-                                <span className="text-lg font-bold">{timeLeft.hours}</span>
-                                <span className="text-[10px] opacity-80">時</span>
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-12">
+                        {/* Left Side: Trip Info */}
+                        <div className="flex-1 text-center md:text-left">
+                            <div className="inline-block border-2 border-gray-800 px-3 py-1 mb-3 transform -rotate-2">
+                                <span className="font-heading font-bold tracking-widest uppercase text-xs">Boarding Pass</span>
+                            </div>
+
+                            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-2 text-gray-800 leading-tight">
+                                ACSM <span className="text-gray-400 italic font-serif">2026</span>
+                            </h1>
+
+                            <div className="flex items-center justify-center md:justify-start gap-4 text-sm font-bold tracking-wider text-gray-600 font-mono">
+                                <span>SF</span>
+                                <Plane size={16} className="text-gray-400" />
+                                <span>SLC</span>
+                                <Plane size={16} className="text-gray-400" />
+                                <span>SAN</span>
+                                <Plane size={16} className="text-gray-400" />
+                                <span>LA</span>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
-                            {/* User Badge */}
-                            {user ? (
-                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel mr-2">
-                                    {user.photoURL ? (
-                                        <img src={user.photoURL} alt={user.displayName || 'User'} className="w-4 h-4 rounded-full" />
-                                    ) : (
-                                        <div className="w-4 h-4 rounded-full bg-indigo-400" />
-                                    )}
-                                    <span className="text-xs font-medium text-indigo-900">{user.displayName || user.email}</span>
-                                    <button onClick={onLogout} className="ml-1 text-indigo-900 hover:text-red-500 transition-colors" title="登出">
-                                        <LogOut size={12} />
-                                    </button>
+                        {/* Right Side: Date & Actions */}
+                        <div className="flex flex-col items-center md:items-end gap-4">
+                            <div className="text-center md:text-right">
+                                <div className="font-hand text-2xl text-gray-500 transform -rotate-3 mb-1">Save the date!</div>
+                                <div className="font-heading text-xl font-bold border-b-2 border-gray-800 inline-block pb-1">
+                                    {startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    <span className="mx-2 text-gray-400">&mdash;</span>
+                                    {endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                 </div>
-                            ) : (
-                                <button
-                                    onClick={onLogin}
-                                    className="px-3 py-1.5 rounded-full bg-white text-indigo-600 hover:bg-indigo-50 text-xs font-bold transition-all shadow-md mr-2"
-                                >
-                                    Google 登入
-                                </button>
-                            )}
-
-                            {/* Hidden File Input */}
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                                accept=".json"
-                                className="hidden"
-                            />
-
-                            <div className="flex glass-panel rounded-full p-1">
-                                <button
-                                    onClick={onExport}
-                                    className="p-2 rounded-full hover:bg-white/40 text-indigo-900 transition-colors"
-                                    title="匯出行程"
-                                >
-                                    <Download size={16} />
-                                </button>
-                                <button
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="p-2 rounded-full hover:bg-white/40 text-indigo-900 transition-colors"
-                                    title="匯入行程"
-                                >
-                                    <Upload size={16} />
-                                </button>
                             </div>
 
-                            <button
-                                onClick={onOpenWallet}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel hover:bg-white/80 text-indigo-900 transition-all"
-                            >
-                                <CreditCard size={16} />
-                                <span className="text-xs font-medium">錢包</span>
-                            </button>
-
-                            {isAdmin && (
-                                <>
-                                    <button
-                                        onClick={onOpenSettings}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel hover:bg-white/80 text-indigo-900 transition-all"
-                                        title="團隊權限管理"
-                                    >
-                                        <Shield size={16} />
+                            <div className="flex gap-3 mt-2">
+                                {/* User Avatar Stamp */}
+                                {user ? (
+                                    <div className="relative group cursor-pointer" title={user.displayName || user.email || ''}>
+                                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 overflow-hidden shadow-sm grayscale hover:grayscale-0 transition-all">
+                                            {user.photoURL ? (
+                                                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500 font-bold">
+                                                    {user.displayName?.[0] || 'U'}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <button onClick={onLogout} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                                            <LogOut size={10} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button onClick={onLogin} className="sticker px-4 py-2 font-hand text-lg font-bold hover:scale-105 transition-transform">
+                                        Sign In
                                     </button>
+                                )}
 
-                                    <button
-                                        onClick={onToggleEdit}
-                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-lg ${isEditing
-                                            ? 'bg-amber-400 text-amber-900 ring-2 ring-amber-200'
-                                            : 'bg-white text-indigo-600 hover:bg-indigo-50'
-                                            }`}
-                                    >
-                                        {isEditing ? '完成' : '編輯'}
+                                {/* Action Stamps */}
+                                <div className="flex gap-2">
+                                    <button onClick={onExport} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Export">
+                                        <Download size={18} />
                                     </button>
-                                </>
-                            )}
+                                    <button onClick={onOpenWallet} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Wallet">
+                                        <CreditCard size={18} />
+                                    </button>
+                                    {isAdmin && (
+                                        <button onClick={onToggleEdit} className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${isEditing ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-300 text-gray-500 hover:border-gray-800 hover:text-gray-800'}`} title="Edit Mode">
+                                            <Shield size={18} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Countdown Post-it */}
+                <div className="absolute -bottom-6 right-8 md:-right-4 paper-note p-4 w-32 text-center transform rotate-3 z-20">
+                    <div className="w-2 h-2 rounded-full bg-red-400 mx-auto mb-2 shadow-sm"></div>
+                    <div className="font-hand text-xl leading-none mb-1 text-gray-600">Countdown</div>
+                    <div className="font-heading text-3xl font-bold text-gray-800">{timeLeft.days}<span className="text-sm font-sans font-normal text-gray-500 ml-1">days</span></div>
                 </div>
             </div>
         </header>
