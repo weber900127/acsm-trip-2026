@@ -155,7 +155,7 @@ function App() {
                     onLogout={logout}
                 />
 
-                <main className="max-w-3xl mx-auto px-4 -mt-6 relative z-20">
+                <main className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
 
                     {/* Navigation Tabs */}
                     {/* Navigation Tabs - Scrapbook Style */}
