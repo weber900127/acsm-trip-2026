@@ -237,7 +237,7 @@ function App() {
                     </AnimatePresence>
 
                     {/* Time Zone Dashboard */}
-                    <div className="mt-4">
+                    <div className="mt-4 mb-8">
                         <TimeZoneCard />
                     </div>
 
