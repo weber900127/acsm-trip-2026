@@ -136,8 +136,14 @@ function App() {
 
     console.log("Scrapbook Theme Loaded v3");
 
+    // Calculate Dynamic Map Activities (Show only expanded days, or all if none expanded)
+    const expandedDayIds = Object.keys(expandedDays).filter(id => expandedDays[id]);
+    const mapActivities = expandedDayIds.length > 0
+        ? filteredItinerary.filter(day => expandedDays[day.id]).flatMap(day => day.activities)
+        : filteredItinerary.flatMap(day => day.activities);
+
     return (
-        <div className="min-h-screen pb-12 relative overflow-x-hidden">
+        <div className="min-h-screen pb-12 relative">
             {/* Paper Texture Overlay (Optional extra grain) */}
             <div className="fixed inset-0 pointer-events-none z-0 opacity-50 mix-blend-multiply" style={{ backgroundImage: 'var(--paper-texture)' }}></div>
 
@@ -252,7 +258,7 @@ function App() {
                                             <h3 className="font-heading font-bold text-gray-800">Trip Map</h3>
                                         </div>
                                         <MapView
-                                            activities={filteredItinerary.flatMap(day => day.activities)}
+                                            activities={mapActivities}
                                             className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-100"
                                         />
                                     </div>
