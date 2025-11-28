@@ -38,21 +38,22 @@ export default function DayCard({
     };
 
     return (
+    return (
         <div
             className={clsx(
-                "bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-300 border-l-4",
+                "glass-panel rounded-xl overflow-hidden transition-all duration-300 border-l-4",
                 getHeaderBorder(day.city),
-                isExpanded ? "shadow-md ring-1 ring-indigo-50 border-indigo-100" : "hover:shadow-md"
+                isExpanded ? "ring-1 ring-white/50" : "hover:bg-white/40"
             )}
         >
             {/* Day Header */}
             <div
                 onClick={onToggle}
-                className="p-5 cursor-pointer hover:bg-gray-50 flex items-start justify-between group select-none"
+                className="p-5 cursor-pointer hover:bg-white/20 flex items-start justify-between group select-none transition-colors"
             >
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
+                        <span className="text-sm font-medium text-indigo-900 bg-white/50 px-2 py-1 rounded-md border border-white/20">
                             {day.cityLabel}
                         </span>
                         <button
@@ -60,7 +61,7 @@ export default function DayCard({
                                 e.stopPropagation();
                                 setShowMap(!showMap);
                             }}
-                            className={`p-1.5 rounded-full transition-colors ${showMap ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-gray-100 text-gray-400'}`}
+                            className={`p-1.5 rounded-full transition-colors ${showMap ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-white/40 text-gray-500'}`}
                             title={showMap ? "切換列表模式" : "切換地圖模式"}
                         >
                             {showMap ? <List size={20} /> : <MapIcon size={20} />}
@@ -68,30 +69,29 @@ export default function DayCard({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                // Placeholder for menu toggle
                                 setIsMenuOpen(!isMenuOpen);
                             }}
-                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
+                            className="p-1.5 rounded-full hover:bg-white/40 text-gray-500 transition-colors"
                             title="更多選項"
                         >
                             <MoreVertical size={20} />
                         </button>
-                        <span className="text-sm text-gray-500 font-mono font-medium">{day.date}</span>
+                        <span className="text-sm text-gray-600 font-mono font-medium">{day.date}</span>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-indigo-700 transition-colors">
                         {day.title}
                     </h3>
                     <p className="text-sm text-gray-600 mt-1 line-clamp-1">{day.summary}</p>
                 </div>
-                <div className={clsx("ml-4 text-gray-400 transition-transform duration-300", isExpanded && "rotate-180 text-indigo-500")}>
+                <div className={clsx("ml-4 text-gray-400 transition-transform duration-300", isExpanded && "rotate-180 text-indigo-600")}>
                     <ChevronDown size={20} />
                 </div>
             </div>
 
             {/* Day Details (Collapsible) */}
             {isExpanded && (
-                <div className="border-t border-gray-100">
-                    <div className="bg-gray-50/50 p-5">
+                <div className="border-t border-white/20">
+                    <div className="bg-white/30 p-5 backdrop-blur-sm">
                         {showMap ? (
                             <MapView activities={day.activities} />
                         ) : (
@@ -112,7 +112,7 @@ export default function DayCard({
                         {isEditing && (
                             <button
                                 onClick={onAddActivity}
-                                className="mt-4 w-full py-2 border-2 border-dashed border-indigo-200 rounded-lg text-indigo-500 font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-colors flex items-center justify-center gap-2"
+                                className="mt-4 w-full py-2 border-2 border-dashed border-indigo-300/50 rounded-lg text-indigo-600 font-medium hover:bg-white/40 hover:border-indigo-400 transition-colors flex items-center justify-center gap-2"
                             >
                                 <Plus size={18} />
                                 新增行程
