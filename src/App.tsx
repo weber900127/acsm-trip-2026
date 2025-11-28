@@ -47,6 +47,7 @@ function App() {
         removeFromIdeaPool,
         moveFromPoolToDay,
         exportItinerary,
+        exportItineraryText,
         importItinerary,
         updateDayInfo,
         undo,
@@ -173,6 +174,7 @@ function App() {
                     isEditing={isEditing}
                     onToggleEdit={() => setIsEditing(!isEditing)}
                     onExport={exportItinerary}
+                    onShare={exportItineraryText}
                     onImport={importItinerary}
                     onOpenWallet={() => setIsWalletOpen(true)}
                     onOpenSettings={() => setIsAdminManagerOpen(true)}

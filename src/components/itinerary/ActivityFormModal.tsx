@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Save, Paperclip, Image as ImageIcon, Link as LinkIcon, Trash2, Wand2 } from 'lucide-react';
+import { X, Save, Paperclip, Image as ImageIcon, Link as LinkIcon, Trash2, Wand2, MapPin } from 'lucide-react';
 import { Activity, ActivityType, Attachment, DayPlan } from '../../data/itinerary';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../lib/firebase';
 import { parseCoordinatesFromUrl } from '../../utils/googleMapsParser';
+import LocationPicker from '../map/LocationPicker';
 
 interface ActivityFormModalProps {
     isOpen: boolean;
@@ -44,7 +45,9 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
     const [isUploading, setIsUploading] = useState(false);
     const [newLinkUrl, setNewLinkUrl] = useState('');
     const [newLinkLabel, setNewLinkLabel] = useState('');
+
     const [showLinkInput, setShowLinkInput] = useState(false);
+    const [showMapPicker, setShowMapPicker] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -338,9 +341,38 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                         />
                                     </div>
 
+                                    {/* ... existing code ... */}
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">座標 (Coordinates)</label>
+                                            <div className="flex justify-between items-center mb-1">
+                                                <label className="block text-sm font-medium text-gray-700">座標 (Coordinates)</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowMapPicker(!showMapPicker)}
+                                                    className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-full transition-colors"
+                                                >
+                                                    <MapPin size={12} />
+                                                    <span>{showMapPicker ? '隱藏地圖' : '地圖選點'}</span>
+                                                </button>
+                                            </div>
+
+                                            {showMapPicker && (
+                                                <div className="mb-3 border rounded-xl overflow-hidden shadow-sm">
+                                                    <LocationPicker
+                                                        initialLat={formData.coordinates?.lat}
+                                                        initialLng={formData.coordinates?.lng}
+                                                        onLocationSelect={(lat, lng) => {
+                                                            setFormData({
+                                                                ...formData,
+                                                                coordinates: { lat, lng }
+                                                            });
+                                                        }}
+                                                        className="h-[200px] w-full"
+                                                    />
+                                                </div>
+                                            )}
+
                                             <div className="flex gap-2 mb-2">
                                                 <input
                                                     type="text"
@@ -354,7 +386,6 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                                                 coordinates: coords
                                                             });
                                                             e.target.value = ''; // Clear input after successful parse
-                                                            // Optional: Show a toast or small success indicator
                                                         }
                                                     }}
                                                 />

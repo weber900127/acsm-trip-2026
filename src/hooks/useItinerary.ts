@@ -200,6 +200,33 @@ export function useItinerary() {
         URL.revokeObjectURL(url);
     };
 
+    const exportItineraryText = () => {
+        let text = `🇺🇸 ACSM 2026 Trip Itinerary\n\n`;
+
+        itinerary.forEach(day => {
+            text += `📅 ${day.date} - ${day.title}\n`;
+            if (day.summary) text += `📝 ${day.summary}\n`;
+
+            if (day.activities.length === 0) {
+                text += `   (No activities)\n`;
+            } else {
+                day.activities.forEach(act => {
+                    text += `   ⏰ ${act.time} ${act.title}\n`;
+                    if (act.location) text += `      📍 ${act.location}\n`;
+                    if (act.tips) text += `      💡 ${act.tips}\n`;
+                });
+            }
+            text += `\n`;
+        });
+
+        navigator.clipboard.writeText(text).then(() => {
+            alert('行程已複製到剪貼簿！可以去 Line 分享囉 📋');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('複製失敗，請手動選取複製');
+        });
+    };
+
     const importItinerary = (file: File) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -240,6 +267,7 @@ export function useItinerary() {
         moveFromPoolToDay,
         resetItinerary,
         exportItinerary,
+        exportItineraryText,
         importItinerary,
         updateDayInfo,
         undo,

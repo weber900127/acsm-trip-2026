@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plane, Download, CreditCard, LogOut, Shield, Lightbulb, RotateCcw } from 'lucide-react';
+import { Plane, Download, CreditCard, LogOut, Shield, Lightbulb, RotateCcw, Share2 } from 'lucide-react';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { User } from 'firebase/auth';
 
@@ -7,6 +7,7 @@ interface HeaderProps {
     isEditing?: boolean;
     onToggleEdit?: () => void;
     onExport?: () => void;
+    onShare?: () => void;
     onImport?: (file: File) => void;
     onOpenWallet?: () => void;
     onOpenSettings?: () => void;
@@ -19,7 +20,7 @@ interface HeaderProps {
     canUndo?: boolean;
 }
 
-export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout, onUndo, canUndo }: HeaderProps) {
+export default function Header({ isEditing, onToggleEdit, onExport, onShare, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout, onUndo, canUndo }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
@@ -150,7 +151,10 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                                         </button>
                                     )}
 
-                                    <button onClick={onExport} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Export">
+                                    <button onClick={onShare} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-indigo-600 hover:text-indigo-600 transition-colors" title="分享行程 (Copy to Clipboard)">
+                                        <Share2 size={18} />
+                                    </button>
+                                    <button onClick={onExport} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="匯出 JSON (Export)">
                                         <Download size={18} />
                                     </button>
                                     <button onClick={onOpenWallet} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Wallet">
