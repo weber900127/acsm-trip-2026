@@ -64,7 +64,7 @@ export default function DayCard({
                             e.stopPropagation();
                             setShowMap(!showMap);
                         }}
-                        className={`p-2 rounded-full border-2 transition-all ${showMap ? 'border-gray-800 text-gray-800 bg-gray-100' : 'border-gray-200 text-gray-400 hover:border-gray-400'}`}
+                        className={`p-2 rounded-full border-2 transition-all lg:hidden ${showMap ? 'border-gray-800 text-gray-800 bg-gray-100' : 'border-gray-200 text-gray-400 hover:border-gray-400'}`}
                         title={showMap ? "List View" : "Map View"}
                     >
                         {showMap ? <List size={18} /> : <MapIcon size={18} />}

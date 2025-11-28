@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Map as MapIcon } from 'lucide-react';
 import Header from './components/layout/Header';
 import DayCard from './components/itinerary/DayCard';
 import TripChecklist from './components/checklist/TripChecklist';
 import ActivityFormModal from './components/itinerary/ActivityFormModal';
 import WalletModal from './components/wallet/WalletModal';
+import { MapView } from './components/map/MapView';
 import AIChatWidget from './components/ai/AIChatWidget';
 import WeatherCard from './components/weather/WeatherCard';
 import AdminManager from './components/auth/AdminManager';
@@ -218,9 +220,9 @@ function App() {
                             </button>
                         </div>
                     ) : (
-                        <>
-                            {/* Itinerary List */}
-                            <div className="space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                            {/* Left Column: Itinerary List */}
+                            <div className="lg:col-span-2 space-y-6">
                                 {filteredItinerary.map((day) => (
                                     <DayCard
                                         key={day.id}
@@ -236,11 +238,25 @@ function App() {
                                         onRemoveActivity={(index) => handleDeleteActivity(day.id, index)}
                                     />
                                 ))}
+
+                                {/* Checklist Section */}
+                                <TripChecklist isEditing={isEditing} />
                             </div>
 
-                            {/* Checklist Section */}
-                            <TripChecklist isEditing={isEditing} />
-                        </>
+                            {/* Right Column: Sticky Map (Desktop Only) */}
+                            <div className="hidden lg:block lg:col-span-1 sticky top-8">
+                                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200 transform rotate-1">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <MapIcon size={20} className="text-indigo-600" />
+                                        <h3 className="font-heading font-bold text-gray-800">Trip Map</h3>
+                                    </div>
+                                    <MapView
+                                        activities={filteredItinerary.flatMap(day => day.activities)}
+                                        className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-100"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     )}
 
                     {/* Footer Note */}
