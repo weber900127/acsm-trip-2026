@@ -125,9 +125,9 @@ export default function DayCard({
                                     <MapView activities={day.activities} />
                                 ) : viewMode === 'list' ? (
                                     // LIST VIEW
-                                    <div className="space-y-4 relative">
+                                    <div className="space-y-4 relative pl-4">
                                         {/* Vertical Line */}
-                                        <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-gray-200 border-l border-dashed border-gray-300"></div>
+                                        <div className="absolute left-8 top-2 bottom-2 w-0.5 bg-gray-200 border-l border-dashed border-gray-300"></div>
 
                                         {day.activities.map((activity, idx) => {
                                             const activityId = `${day.id}-${idx}`;
@@ -169,7 +169,7 @@ export default function DayCard({
 
                                                     {/* Travel Time Estimator */}
                                                     {distanceInfo && (
-                                                        <div className="absolute left-4 bottom-[-24px] transform -translate-x-1/2 z-10 bg-white border-2 border-indigo-100 rounded-full px-3 py-1 text-xs font-bold text-indigo-600 flex items-center gap-1.5 shadow-md whitespace-nowrap group-hover/time:scale-110 transition-transform">
+                                                        <div className="absolute left-8 bottom-[-24px] transform -translate-x-1/2 z-10 bg-white border-2 border-indigo-100 rounded-full px-3 py-1 text-xs font-bold text-indigo-600 flex items-center gap-1.5 shadow-md whitespace-nowrap group-hover/time:scale-110 transition-transform">
                                                             <span className="bg-indigo-100 p-0.5 rounded-full">🚗</span>
                                                             <span>{distanceInfo.dist} km</span>
                                                             <span className="text-indigo-200">|</span>
