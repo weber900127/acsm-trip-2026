@@ -250,6 +250,7 @@ function App() {
                                         onUpdateActivity={(index, activity) => handleEditActivity(day.id, index, activity)}
                                         onRemoveActivity={(index) => handleDeleteActivity(day.id, index)}
                                         onActivityFocus={(id) => setHighlightedActivityId(id)}
+                                        highlightedActivityId={highlightedActivityId}
                                     />
                                 ))}
 

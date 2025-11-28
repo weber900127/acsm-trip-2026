@@ -13,6 +13,7 @@ interface ActivityItemProps {
     activity: Activity;
     isLast: boolean;
     isEditing?: boolean;
+    isHighlighted?: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
     onFocus?: (id: string) => void;
@@ -23,6 +24,7 @@ export default function ActivityItem({
     activity,
     isLast,
     isEditing,
+    isHighlighted,
     onEdit,
     onDelete,
     onFocus
@@ -51,13 +53,13 @@ export default function ActivityItem({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative flex gap-4 group/item"
+            className={`relative flex gap-4 group/item p-3 rounded-xl transition-colors duration-300 ${isHighlighted ? 'bg-yellow-50 ring-1 ring-yellow-200' : 'hover:bg-gray-50'}`}
             onViewportEnter={() => {
                 if (id && onFocus) {
                     onFocus(id);
                 }
             }}
-            viewport={{ amount: 0.6, margin: "0px 0px -20% 0px" }}
+            viewport={{ amount: 0.2, margin: "-10% 0px -40% 0px" }}
         >
             {/* Timeline Line */}
             {!isLast && (

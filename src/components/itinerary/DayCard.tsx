@@ -14,6 +14,7 @@ interface DayCardProps {
     onUpdateActivity?: (index: number, activity: Activity) => void;
     onRemoveActivity?: (index: number) => void;
     onActivityFocus?: (id: string) => void;
+    highlightedActivityId?: string | null;
 }
 
 export default function DayCard({
@@ -24,7 +25,8 @@ export default function DayCard({
     onAddActivity,
     onUpdateActivity,
     onRemoveActivity,
-    onActivityFocus
+    onActivityFocus,
+    highlightedActivityId
 }: DayCardProps) {
     const [showMap, setShowMap] = useState(false);
 
@@ -88,18 +90,22 @@ export default function DayCard({
                                 {/* Vertical Line */}
                                 <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-gray-200 border-l border-dashed border-gray-300"></div>
 
-                                {day.activities.map((activity, idx) => (
-                                    <ActivityItem
-                                        key={idx}
-                                        id={`${day.id}-${idx}`}
-                                        activity={activity}
-                                        isLast={idx === day.activities.length - 1}
-                                        isEditing={isEditing}
-                                        onEdit={() => onUpdateActivity?.(idx, activity)}
-                                        onDelete={() => onRemoveActivity?.(idx)}
-                                        onFocus={onActivityFocus}
-                                    />
-                                ))}
+                                {day.activities.map((activity, idx) => {
+                                    const activityId = `${day.id}-${idx}`;
+                                    return (
+                                        <ActivityItem
+                                            key={idx}
+                                            id={activityId}
+                                            activity={activity}
+                                            isLast={idx === day.activities.length - 1}
+                                            isEditing={isEditing}
+                                            isHighlighted={highlightedActivityId === activityId}
+                                            onEdit={() => onUpdateActivity?.(idx, activity)}
+                                            onDelete={() => onRemoveActivity?.(idx)}
+                                            onFocus={onActivityFocus}
+                                        />
+                                    );
+                                })}
                             </div>
                         )}
 
