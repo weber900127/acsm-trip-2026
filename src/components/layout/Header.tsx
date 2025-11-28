@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plane, Download, CreditCard, LogOut, Shield, Lightbulb } from 'lucide-react';
+import { Plane, Download, CreditCard, LogOut, Shield, Lightbulb, RotateCcw } from 'lucide-react';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { User } from 'firebase/auth';
 
@@ -15,9 +15,11 @@ interface HeaderProps {
     isAdmin?: boolean;
     onLogin: () => void;
     onLogout: () => void;
+    onUndo?: () => void;
+    canUndo?: boolean;
 }
 
-export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout }: HeaderProps) {
+export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout, onUndo, canUndo }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
@@ -136,6 +138,18 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
 
                                 {/* Action Stamps */}
                                 <div className="flex gap-2">
+                                    {/* Undo Button */}
+                                    {isAdmin && (
+                                        <button
+                                            onClick={onUndo}
+                                            disabled={!canUndo}
+                                            className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${canUndo ? 'border-gray-300 text-gray-500 hover:border-indigo-500 hover:text-indigo-600' : 'border-gray-200 text-gray-300 cursor-not-allowed'}`}
+                                            title="復原 (Undo)"
+                                        >
+                                            <RotateCcw size={18} />
+                                        </button>
+                                    )}
+
                                     <button onClick={onExport} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Export">
                                         <Download size={18} />
                                     </button>

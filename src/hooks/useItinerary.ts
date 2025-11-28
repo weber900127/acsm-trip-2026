@@ -8,6 +8,9 @@ export function useItinerary() {
     const [loading, setLoading] = useState(true);
     const [unassignedActivities, setUnassignedActivities] = useState<Activity[]>([]);
 
+    // History State
+    const [past, setPast] = useState<{ days: DayPlan[], unassigned: Activity[] }[]>([]);
+
     // Use different document for dev vs prod to prevent overwriting production data
     const DOC_ID = import.meta.env.DEV ? "dev" : "main";
 
@@ -41,6 +44,25 @@ export function useItinerary() {
         }
     };
 
+    // History Helper
+    const saveToHistory = () => {
+        setPast(prev => [...prev, { days: itinerary, unassigned: unassignedActivities }]);
+    };
+
+    const undo = () => {
+        if (past.length === 0) return;
+
+        const previous = past[past.length - 1];
+        const newPast = past.slice(0, -1);
+
+        setPast(newPast);
+        // Optimistic update
+        setItinerary(previous.days);
+        setUnassignedActivities(previous.unassigned);
+        // Sync to Firestore
+        saveToFirestore(previous.days, previous.unassigned);
+    };
+
     // Helper to sort activities by time
     const sortActivities = (activities: Activity[]) => {
         return [...activities].sort((a, b) => {
@@ -52,6 +74,7 @@ export function useItinerary() {
     };
 
     const addActivity = (dayId: string, activity: Activity) => {
+        saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
                 const newActivities = [...day.activities, activity];
@@ -63,6 +86,7 @@ export function useItinerary() {
     };
 
     const removeActivity = (dayId: string, index: number) => {
+        saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
                 const newActivities = [...day.activities];
@@ -75,6 +99,7 @@ export function useItinerary() {
     };
 
     const updateActivity = (dayId: string, index: number, updatedActivity: Activity) => {
+        saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
                 const newActivities = [...day.activities];
@@ -87,6 +112,7 @@ export function useItinerary() {
     };
 
     const moveActivity = (fromDayId: string, toDayId: string, activity: Activity, index?: number) => {
+        saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === fromDayId) {
                 // Remove from source
@@ -109,17 +135,20 @@ export function useItinerary() {
 
     // Idea Pool Operations
     const addToIdeaPool = (activity: Activity) => {
+        saveToHistory();
         const newUnassigned = [...unassignedActivities, activity];
         saveToFirestore(itinerary, newUnassigned);
     };
 
     const removeFromIdeaPool = (index: number) => {
+        saveToHistory();
         const newUnassigned = [...unassignedActivities];
         newUnassigned.splice(index, 1);
         saveToFirestore(itinerary, newUnassigned);
     };
 
     const moveFromPoolToDay = (poolIndex: number, dayId: string) => {
+        saveToHistory();
         const activity = unassignedActivities[poolIndex];
         const newUnassigned = [...unassignedActivities];
         newUnassigned.splice(poolIndex, 1);
@@ -136,6 +165,7 @@ export function useItinerary() {
     };
 
     const updateDayInfo = (dayId: string, title: string, summary: string) => {
+        saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
                 return { ...day, title, summary };
@@ -152,6 +182,7 @@ export function useItinerary() {
 
     const resetItinerary = () => {
         if (confirm('確定要重置所有行程嗎？這將會覆蓋雲端上的資料。')) {
+            saveToHistory();
             saveToFirestore(defaultData, []);
         }
     };
@@ -176,6 +207,7 @@ export function useItinerary() {
                 const result = e.target?.result as string;
                 const parsed = JSON.parse(result);
 
+                saveToHistory();
                 // Handle legacy format (array only) or new format (object with days/unassigned)
                 if (Array.isArray(parsed)) {
                     saveToFirestore(parsed, []);
@@ -209,6 +241,8 @@ export function useItinerary() {
         resetItinerary,
         exportItinerary,
         importItinerary,
-        updateDayInfo
+        updateDayInfo,
+        undo,
+        canUndo: past.length > 0
     };
 }

@@ -46,7 +46,9 @@ function App() {
         moveFromPoolToDay,
         exportItinerary,
         importItinerary,
-        updateDayInfo
+        updateDayInfo,
+        undo,
+        canUndo
     } = useItinerary();
 
     const {
@@ -174,6 +176,8 @@ function App() {
                     isAdmin={isUserAdmin}
                     onLogin={login}
                     onLogout={logout}
+                    onUndo={undo}
+                    canUndo={canUndo}
                 />
 
                 <main className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
