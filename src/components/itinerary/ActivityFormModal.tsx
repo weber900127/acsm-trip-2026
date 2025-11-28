@@ -56,9 +56,15 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
             if (initialData) {
                 setFormData({ ...initialData, attachments: initialData.attachments || [] });
                 // Parse time string "14:00 (TPE)" -> "14:00" and "(TPE)"
-                const match = initialData.time.match(/^(\d{2}:\d{2})\s*(\(.*\))?$/);
+                // Updated regex to support single digit hours "9:00"
+                const match = initialData.time.match(/^(\d{1,2}:\d{2})\s*(\(.*\))?$/);
                 if (match) {
-                    setTimeValue(match[1]);
+                    // Ensure HH is padded with 0 if needed (e.g. 9:00 -> 09:00) for input[type="time"]
+                    const timePart = match[1];
+                    const [hours, minutes] = timePart.split(':');
+                    const paddedTime = `${hours.padStart(2, '0')}:${minutes}`;
+
+                    setTimeValue(paddedTime);
                     setTimezoneValue(match[2] || '(Local)');
                 } else {
                     setTimeValue(initialData.time);
@@ -249,6 +255,25 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                                 value={timeValue}
                                                 onChange={e => setTimeValue(e.target.value)}
                                             />
+                                            {/* Quick Select Dropdown */}
+                                            <select
+                                                className="w-24 px-2 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-gray-50"
+                                                onChange={e => {
+                                                    if (e.target.value) setTimeValue(e.target.value);
+                                                }}
+                                                value=""
+                                            >
+                                                <option value="" disabled>快速選擇</option>
+                                                {Array.from({ length: 48 }).map((_, i) => {
+                                                    const h = Math.floor(i / 2).toString().padStart(2, '0');
+                                                    const m = i % 2 === 0 ? '00' : '30';
+                                                    return (
+                                                        <option key={i} value={`${h}:${m}`}>
+                                                            {`${h}:${m}`}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="col-span-2 sm:col-span-1">
@@ -544,7 +569,8 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                         </div>
                     </motion.div>
                 </>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 }
