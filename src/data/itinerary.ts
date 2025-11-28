@@ -45,68 +45,52 @@ export const itineraryData: DayPlan[] = [
     // --- San Francisco ---
     {
         id: 'day1',
-        date: '2026/05/20 (三)',
+        date: '2026/05/19 (二)',
         city: 'SF',
         cityLabel: '舊金山',
         title: '啟程與抵達',
-        summary: '搭乘星宇航空抵達舊金山，調適時差。',
+        summary: '搭乘星宇航空跨越換日線，抵達舊金山。',
         activities: [
             {
-                time: '14:00 (TPE)',
-                title: '桃園機場報到',
-                description: '前往桃園機場第二航廈，星宇航空櫃檯辦理登機。',
+                time: '00:50 (TW)',
+                title: '桃園機場起飛',
+                description: '搭乘星宇航空 JX012 航班前往舊金山 (5/20 凌晨出發)。',
                 type: 'flight',
                 iconName: 'Plane',
-                coordinates: { lat: 25.0797, lng: 121.2342 }
+                coordinates: { lat: 25.0797, lng: 121.2342 },
+                tips: '請於 5/19 晚上 22:50 前抵達機場櫃檯報到。'
             },
             {
-                time: '16:30 (TPE)',
-                title: '起飛前往舊金山',
-                description: '預計搭乘 JX012 航班 (時間依季班表為準)。',
-                type: 'flight',
-                iconName: 'Plane',
-            },
-            {
-                time: '12:30 (SFO)',
+                time: '20:30 (US)',
                 title: '抵達 SFO 機場',
-                description: '辦理入境手續、領取行李。',
-                type: 'transport',
+                description: '抵達舊金山國際機場 (當地時間 5/19 晚上)。',
+                type: 'flight',
                 iconName: 'MapPin',
-                tips: '美西入境排隊時間較長，預留 1.5-2 小時。',
+                tips: '入境排隊時間較長，預計 22:00 出關。',
                 coordinates: { lat: 37.6213, lng: -122.3790 }
             },
             {
-                time: '14:30',
-                title: '前往市區飯店',
-                description: '搭乘 BART (捷運) 黃線至 Powell St. 站或搭乘 Uber/Lyft。',
+                time: '22:30',
+                title: '前往飯店',
+                description: '搭乘 Uber/Lyft 前往市區飯店休息。',
                 type: 'transport',
-                iconName: 'Train',
-                tips: '若住 Union Square，BART 是最經濟快速的選擇。'
+                iconName: 'Car'
             },
             {
-                time: '16:00',
-                title: '飯店 Check-in & 休息',
-                description: '入住飯店，簡單整理。',
+                time: '23:30',
+                title: '飯店 Check-in',
+                description: '入住飯店，調整時差準備明天的行程。',
                 type: 'hotel',
                 iconName: 'Moon'
-            },
-            {
-                time: '18:00',
-                title: '渡輪大廈晚餐',
-                description: '前往 Ferry Building Marketplace 覓食，欣賞海灣大橋夜景。',
-                type: 'food',
-                iconName: 'Utensils',
-                location: '1 Ferry Building, San Francisco',
-                coordinates: { lat: 37.7955, lng: -122.3937 }
             }
         ]
     },
     {
         id: 'day2',
-        date: '2026/05/21 (四)',
+        date: '2026/05/20 (三)',
         city: 'SF',
         cityLabel: '舊金山/矽谷',
-        title: '科技朝聖日：Apple Park',
+        title: '矽谷科技朝聖',
         summary: '租車南下，造訪 Apple Park、Google 與史丹佛大學。',
         activities: [
             {
