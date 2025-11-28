@@ -130,13 +130,13 @@ function App() {
         }
     };
 
+    const [highlightedActivityId, setHighlightedActivityId] = useState<string | null>(null);
+
     if (authLoading) {
         return <div className="min-h-screen flex items-center justify-center bg-[var(--paper-bg)] text-gray-500 font-hand text-xl">Loading your memories...</div>;
     }
 
     console.log("Scrapbook Theme Loaded v3");
-
-    const [highlightedActivityId, setHighlightedActivityId] = useState<string | null>(null);
 
     // Calculate Dynamic Map Activities (Show only expanded days, or all if none expanded)
     // Also enrich with IDs for map highlighting
