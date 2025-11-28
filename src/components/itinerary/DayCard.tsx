@@ -38,7 +38,6 @@ export default function DayCard({
     };
 
     return (
-    return (
         <div
             className={clsx(
                 "glass-panel rounded-xl overflow-hidden transition-all duration-300 border-l-4",
