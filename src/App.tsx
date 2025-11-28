@@ -45,7 +45,8 @@ function App() {
         removeFromIdeaPool,
         moveFromPoolToDay,
         exportItinerary,
-        importItinerary
+        importItinerary,
+        updateDayInfo
     } = useItinerary();
 
     const {
@@ -258,6 +259,7 @@ function App() {
                                         onRemoveActivity={(index) => handleDeleteActivity(day.id, index)}
                                         onActivityFocus={(id) => setHighlightedActivityId(id)}
                                         highlightedActivityId={highlightedActivityId}
+                                        onUpdateDayInfo={(title, summary) => updateDayInfo(day.id, title, summary)}
                                     />
                                 ))}
 

@@ -16,6 +16,7 @@ interface DayCardProps {
     onRemoveActivity?: (index: number) => void;
     onActivityFocus?: (id: string) => void;
     highlightedActivityId?: string | null;
+    onUpdateDayInfo?: (title: string, summary: string) => void;
 }
 
 export default function DayCard({
@@ -27,7 +28,8 @@ export default function DayCard({
     onUpdateActivity,
     onRemoveActivity,
     onActivityFocus,
-    highlightedActivityId
+    highlightedActivityId,
+    onUpdateDayInfo
 }: DayCardProps) {
     const [showMap, setShowMap] = useState(false);
     const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
@@ -65,10 +67,31 @@ export default function DayCard({
                         </span>
                     </div>
 
-                    <h3 className="text-2xl font-heading font-bold text-gray-800 mb-2 leading-tight">
-                        {day.title}
-                    </h3>
-                    <p className="font-hand text-lg text-gray-500 leading-snug">{day.summary}</p>
+                    {isEditing ? (
+                        <div onClick={e => e.stopPropagation()} className="space-y-2 mb-2">
+                            <input
+                                type="text"
+                                value={day.title}
+                                onChange={(e) => onUpdateDayInfo?.(e.target.value, day.summary)}
+                                className="w-full text-2xl font-heading font-bold text-gray-800 border-b-2 border-indigo-200 focus:border-indigo-500 outline-none bg-transparent"
+                                placeholder="輸入標題..."
+                            />
+                            <input
+                                type="text"
+                                value={day.summary}
+                                onChange={(e) => onUpdateDayInfo?.(day.title, e.target.value)}
+                                className="w-full font-hand text-lg text-gray-500 border-b-2 border-indigo-200 focus:border-indigo-500 outline-none bg-transparent"
+                                placeholder="輸入簡介..."
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <h3 className="text-2xl font-heading font-bold text-gray-800 mb-2 leading-tight">
+                                {day.title}
+                            </h3>
+                            <p className="font-hand text-lg text-gray-500 leading-snug">{day.summary}</p>
+                        </>
+                    )}
                 </div>
 
                 <div className="ml-4 flex flex-col gap-2">

@@ -135,6 +135,16 @@ export function useItinerary() {
         saveToFirestore(newItinerary, newUnassigned);
     };
 
+    const updateDayInfo = (dayId: string, title: string, summary: string) => {
+        const newItinerary = itinerary.map(day => {
+            if (day.id === dayId) {
+                return { ...day, title, summary };
+            }
+            return day;
+        });
+        saveToFirestore(newItinerary, unassignedActivities);
+    };
+
     // Deprecated - kept for backwards compatibility but does nothing (auto-sorting is now enforced)
     const reorderActivity = (_dayId: string, _index: number, _direction: 'up' | 'down') => {
         console.warn('reorderActivity is deprecated. Activities are now automatically sorted by time.');
@@ -198,6 +208,7 @@ export function useItinerary() {
         moveFromPoolToDay,
         resetItinerary,
         exportItinerary,
-        importItinerary
+        importItinerary,
+        updateDayInfo
     };
 }
