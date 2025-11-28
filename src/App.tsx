@@ -220,7 +220,7 @@ function App() {
                             </button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Left Column: Itinerary List */}
                             <div className="lg:col-span-2 space-y-6">
                                 {filteredItinerary.map((day) => (
@@ -244,16 +244,18 @@ function App() {
                             </div>
 
                             {/* Right Column: Sticky Map (Desktop Only) */}
-                            <div className="hidden lg:block lg:col-span-1 sticky top-8">
-                                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200 transform rotate-1">
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <MapIcon size={20} className="text-indigo-600" />
-                                        <h3 className="font-heading font-bold text-gray-800">Trip Map</h3>
+                            <div className="hidden lg:block lg:col-span-1">
+                                <div className="sticky top-8">
+                                    <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200 transform rotate-1">
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <MapIcon size={20} className="text-indigo-600" />
+                                            <h3 className="font-heading font-bold text-gray-800">Trip Map</h3>
+                                        </div>
+                                        <MapView
+                                            activities={filteredItinerary.flatMap(day => day.activities)}
+                                            className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-100"
+                                        />
                                     </div>
-                                    <MapView
-                                        activities={filteredItinerary.flatMap(day => day.activities)}
-                                        className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-100"
-                                    />
                                 </div>
                             </div>
                         </div>

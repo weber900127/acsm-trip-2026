@@ -43,8 +43,8 @@ import { generateGeodesicCurve, getDistance } from '../../utils/geodesic';
 // ... imports
 
 export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[300px] w-full rounded-xl overflow-hidden" }) => {
-    // Filter activities with coordinates
-    const validActivities = activities.filter(a => a.coordinates);
+    // Filter activities with coordinates, excluding Taiwan (positive longitude) to focus on US trip
+    const validActivities = activities.filter(a => a.coordinates && a.coordinates.lng < 0);
 
     // Calculate path coordinates with geodesic curves for long distances
     const pathCoordinates: [number, number][] = [];
