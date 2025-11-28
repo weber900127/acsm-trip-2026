@@ -16,7 +16,7 @@ interface HeaderProps {
     onLogout: () => void;
 }
 
-export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, user, isAdmin, onLogin, onLogout }: HeaderProps) {
+export default function Header({ isEditing, onExport, onOpenWallet, onOpenSettings, user, isAdmin, onLogin, onLogout }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
@@ -142,7 +142,7 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                                         <CreditCard size={18} />
                                     </button>
                                     {isAdmin && (
-                                        <button onClick={onToggleEdit} className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${isEditing ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-300 text-gray-500 hover:border-gray-800 hover:text-gray-800'}`} title="Edit Mode">
+                                        <button onClick={onOpenSettings} className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${isEditing ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-300 text-gray-500 hover:border-gray-800 hover:text-gray-800'}`} title="Admin Settings">
                                             <Shield size={18} />
                                         </button>
                                     )}
