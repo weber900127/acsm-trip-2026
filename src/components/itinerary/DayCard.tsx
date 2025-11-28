@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, Plus, List, Clock, Map as MapIcon } from 'lucide-react';
+import { ChevronDown, Plus, List, Clock, Map as MapIcon, Wand2 } from 'lucide-react';
 import { DayPlan, Activity } from '../../data/itinerary';
 import ActivityItem from './ActivityItem';
 import { MapView } from '../map/MapView';
@@ -41,6 +41,34 @@ export default function DayCard({
         return h * 60 + m;
     };
 
+    // Heuristic Title Generator
+    const generateSmartTitle = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!day.activities || day.activities.length === 0) return;
+
+        let newTitle = "";
+
+        // 1. Check for Flights
+        const flights = day.activities.filter(a => a.type === 'flight');
+        if (flights.length > 0) {
+            const dests = flights.map(f => f.title.split(' to ')[1] || f.title).join(' & ');
+            newTitle = `飛往 ${dests}`;
+        } else {
+            // 2. Check for Major Activities (Sightseeing, etc.)
+            // Filter out meals and transport unless they are the only things
+            const mainActs = day.activities.filter(a => a.type !== 'food' && a.type !== 'transport');
+            const candidates = mainActs.length > 0 ? mainActs : day.activities;
+
+            // Take top 2
+            const titles = candidates.slice(0, 2).map(a => a.title);
+            newTitle = titles.join(' & ');
+        }
+
+        if (newTitle && onUpdateDayInfo) {
+            onUpdateDayInfo(newTitle, day.summary);
+        }
+    };
+
     return (
         <div
             className={clsx(
@@ -69,13 +97,22 @@ export default function DayCard({
 
                     {isEditing ? (
                         <div onClick={e => e.stopPropagation()} className="space-y-2 mb-2">
-                            <input
-                                type="text"
-                                value={day.title}
-                                onChange={(e) => onUpdateDayInfo?.(e.target.value, day.summary)}
-                                className="w-full text-2xl font-heading font-bold text-gray-800 border-b-2 border-indigo-200 focus:border-indigo-500 outline-none bg-transparent"
-                                placeholder="輸入標題..."
-                            />
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={day.title}
+                                    onChange={(e) => onUpdateDayInfo?.(e.target.value, day.summary)}
+                                    className="flex-1 text-2xl font-heading font-bold text-gray-800 border-b-2 border-indigo-200 focus:border-indigo-500 outline-none bg-transparent"
+                                    placeholder="輸入標題..."
+                                />
+                                <button
+                                    onClick={generateSmartTitle}
+                                    className="p-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-200 transition-colors"
+                                    title="自動產生標題 (魔法按鈕)"
+                                >
+                                    <Wand2 size={18} />
+                                </button>
+                            </div>
                             <input
                                 type="text"
                                 value={day.summary}
