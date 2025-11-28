@@ -239,7 +239,7 @@ function App() {
                             </div>
 
                             {/* Checklist Section */}
-                            <TripChecklist />
+                            <TripChecklist isEditing={isEditing} />
                         </>
                     )}
 
