@@ -136,11 +136,18 @@ function App() {
 
     console.log("Scrapbook Theme Loaded v3");
 
+    const [highlightedActivityId, setHighlightedActivityId] = useState<string | null>(null);
+
     // Calculate Dynamic Map Activities (Show only expanded days, or all if none expanded)
+    // Also enrich with IDs for map highlighting
     const expandedDayIds = Object.keys(expandedDays).filter(id => expandedDays[id]);
+
+    // Helper to add ID to activity
+    const enrichActivity = (dayId: string) => (act: Activity, idx: number) => ({ ...act, id: `${dayId}-${idx}` });
+
     const mapActivities = expandedDayIds.length > 0
-        ? filteredItinerary.filter(day => expandedDays[day.id]).flatMap(day => day.activities)
-        : filteredItinerary.flatMap(day => day.activities);
+        ? filteredItinerary.filter(day => expandedDays[day.id]).flatMap(day => day.activities.map(enrichActivity(day.id)))
+        : filteredItinerary.flatMap(day => day.activities.map(enrichActivity(day.id)));
 
     return (
         <div className="min-h-screen pb-12 relative">
@@ -242,6 +249,7 @@ function App() {
                                         }}
                                         onUpdateActivity={(index, activity) => handleEditActivity(day.id, index, activity)}
                                         onRemoveActivity={(index) => handleDeleteActivity(day.id, index)}
+                                        onActivityFocus={(id) => setHighlightedActivityId(id)}
                                     />
                                 ))}
 
@@ -259,6 +267,7 @@ function App() {
                                         </div>
                                         <MapView
                                             activities={mapActivities}
+                                            highlightedActivityId={highlightedActivityId}
                                             className="h-[500px] w-full rounded-lg overflow-hidden border border-gray-100"
                                         />
                                     </div>

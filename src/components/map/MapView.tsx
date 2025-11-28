@@ -19,9 +19,14 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+interface MapActivity extends Activity {
+    id?: string;
+}
+
 interface MapViewProps {
-    activities: Activity[];
+    activities: MapActivity[];
     className?: string;
+    highlightedActivityId?: string | null;
 }
 
 // Component to update map view bounds based on markers
@@ -42,7 +47,7 @@ import { generateGeodesicCurve, getDistance } from '../../utils/geodesic';
 
 // ... imports
 
-export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[300px] w-full rounded-xl overflow-hidden" }) => {
+export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[300px] w-full rounded-xl overflow-hidden", highlightedActivityId }) => {
     // Filter activities with coordinates, excluding Taiwan (positive longitude) to focus on US trip
     const validActivities = activities.filter(a => a.coordinates && a.coordinates.lng < 0);
 
@@ -99,29 +104,45 @@ export const MapView: React.FC<MapViewProps> = ({ activities, className = "h-[30
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {validActivities.map((activity, index) => (
-                    <Marker
-                        key={index}
-                        position={[activity.coordinates!.lat, activity.coordinates!.lng]}
-                    >
-                        <Popup>
-                            <div className="font-sans">
-                                <div className="font-bold text-indigo-600">{activity.time}</div>
-                                <div className="font-medium">{activity.title}</div>
-                                <div className="text-xs text-gray-500 mt-1">{activity.location}</div>
-                                <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${activity.coordinates!.lat},${activity.coordinates!.lng}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 text-xs text-blue-500 mt-2 hover:underline"
-                                >
-                                    <Navigation className="w-3 h-3" />
-                                    Google Maps 導航
-                                </a>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
+                {validActivities.map((activity, index) => {
+                    const isHighlighted = highlightedActivityId && activity.id === highlightedActivityId;
+
+                    // Custom icon for highlighted state
+                    const markerIcon = isHighlighted ? L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [30, 48], // Slightly larger
+                        iconAnchor: [15, 48],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    }) : DefaultIcon;
+
+                    return (
+                        <Marker
+                            key={index}
+                            position={[activity.coordinates!.lat, activity.coordinates!.lng]}
+                            icon={markerIcon}
+                            zIndexOffset={isHighlighted ? 1000 : 0}
+                        >
+                            <Popup>
+                                <div className="font-sans">
+                                    <div className="font-bold text-indigo-600">{activity.time}</div>
+                                    <div className="font-medium">{activity.title}</div>
+                                    <div className="text-xs text-gray-500 mt-1">{activity.location}</div>
+                                    <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${activity.coordinates!.lat},${activity.coordinates!.lng}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1 text-xs text-blue-500 mt-2 hover:underline"
+                                    >
+                                        <Navigation className="w-3 h-3" />
+                                        Google Maps 導航
+                                    </a>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    );
+                })}
 
                 {pathCoordinates.length > 1 && (
                     <Polyline

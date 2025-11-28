@@ -9,19 +9,23 @@ import { formatDistanceToNow } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 
 interface ActivityItemProps {
+    id?: string;
     activity: Activity;
     isLast: boolean;
     isEditing?: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
+    onFocus?: (id: string) => void;
 }
 
 export default function ActivityItem({
+    id,
     activity,
     isLast,
     isEditing,
     onEdit,
-    onDelete
+    onDelete,
+    onFocus
 }: ActivityItemProps) {
     const getIcon = (name?: string) => {
         switch (name) {
@@ -48,6 +52,12 @@ export default function ActivityItem({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             className="relative flex gap-4 group/item"
+            onViewportEnter={() => {
+                if (id && onFocus) {
+                    onFocus(id);
+                }
+            }}
+            viewport={{ amount: 0.6, margin: "0px 0px -20% 0px" }}
         >
             {/* Timeline Line */}
             {!isLast && (

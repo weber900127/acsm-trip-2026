@@ -13,6 +13,7 @@ interface DayCardProps {
     onAddActivity?: () => void;
     onUpdateActivity?: (index: number, activity: Activity) => void;
     onRemoveActivity?: (index: number) => void;
+    onActivityFocus?: (id: string) => void;
 }
 
 export default function DayCard({
@@ -22,7 +23,8 @@ export default function DayCard({
     isEditing,
     onAddActivity,
     onUpdateActivity,
-    onRemoveActivity
+    onRemoveActivity,
+    onActivityFocus
 }: DayCardProps) {
     const [showMap, setShowMap] = useState(false);
 
@@ -89,11 +91,13 @@ export default function DayCard({
                                 {day.activities.map((activity, idx) => (
                                     <ActivityItem
                                         key={idx}
+                                        id={`${day.id}-${idx}`}
                                         activity={activity}
                                         isLast={idx === day.activities.length - 1}
                                         isEditing={isEditing}
                                         onEdit={() => onUpdateActivity?.(idx, activity)}
                                         onDelete={() => onRemoveActivity?.(idx)}
+                                        onFocus={onActivityFocus}
                                     />
                                 ))}
                             </div>
