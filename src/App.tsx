@@ -8,6 +8,7 @@ import WalletModal from './components/wallet/WalletModal';
 import { MapView } from './components/map/MapView';
 import AIChatWidget from './components/ai/AIChatWidget';
 import WeatherCard from './components/weather/WeatherCard';
+import TimeZoneCard from './components/dashboard/TimeZoneCard';
 import AdminManager from './components/auth/AdminManager';
 import IdeaPool from './components/itinerary/IdeaPool';
 import { useItinerary } from './hooks/useItinerary';
@@ -235,6 +236,11 @@ function App() {
                         )}
                     </AnimatePresence>
 
+                    {/* Time Zone Dashboard */}
+                    <div className="mt-4">
+                        <TimeZoneCard />
+                    </div>
+
                     {/* Auth Guard: Only show content if logged in */}
                     {!user ? (
                         <div className="bg-white rounded-2xl p-8 shadow-sm text-center mt-8">
@@ -274,7 +280,7 @@ function App() {
                                 ))}
 
                                 {/* Checklist Section */}
-                                <TripChecklist isEditing={isEditing} />
+                                <TripChecklist isEditing={isEditing} itinerary={itinerary} />
                             </div>
 
                             {/* Right Column: Sticky Map (Desktop Only) */}

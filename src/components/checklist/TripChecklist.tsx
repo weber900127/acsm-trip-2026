@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { CheckSquare, Check, Plus, Trash2, X, Save } from 'lucide-react';
-import { checklistItems as defaultItems } from '../../data/itinerary';
+import { CheckSquare, Check, Plus, Trash2, X, Save, Wand2 } from 'lucide-react';
+import { checklistItems as defaultItems, DayPlan } from '../../data/itinerary';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import clsx from 'clsx';
 
 interface TripChecklistProps {
     isEditing?: boolean;
+    itinerary?: DayPlan[];
 }
 
-export default function TripChecklist({ isEditing }: TripChecklistProps) {
+export default function TripChecklist({ isEditing, itinerary }: TripChecklistProps) {
     const [items, setItems] = useState<string[]>([]);
     const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
         const saved = localStorage.getItem('trip_checklist');
@@ -80,6 +81,49 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
         setEditingIndex(null);
     };
 
+    const generateSmartChecklist = async () => {
+        if (!itinerary) return;
+
+        const suggestedItems: string[] = [];
+        const allActivities = itinerary.flatMap(day => day.activities);
+        const allTitles = allActivities.map(a => a.title.toLowerCase());
+        const allTypes = allActivities.map(a => a.type);
+
+        // Logic for suggestions
+        if (allTitles.some(t => t.includes('swim') || t.includes('beach') || t.includes('pool'))) {
+            suggestedItems.push('泳衣/泳褲', '海灘巾', '防水手機袋');
+        }
+        if (allTitles.some(t => t.includes('hike') || t.includes('trail') || t.includes('mountain'))) {
+            suggestedItems.push('登山鞋', '登山杖', '防蚊液');
+        }
+        if (allTitles.some(t => t.includes('rain') || t.includes('storm'))) { // Simple keyword check, ideally check weather API
+            suggestedItems.push('雨傘/雨衣', '防水鞋');
+        }
+        if (allTypes.includes('flight')) {
+            suggestedItems.push('頸枕', '眼罩', '護照', '機票 (電子/紙本)');
+        }
+        if (allTypes.includes('conference')) {
+            suggestedItems.push('名片', '正式服裝', '筆記本');
+        }
+
+        // Add generic items if missing
+        const generics = ['萬用轉接頭', '行動電源', '個人藥品', '盥洗用品'];
+        generics.forEach(item => suggestedItems.push(item));
+
+        // Filter out duplicates (both within suggestions and existing items)
+        const uniqueSuggestions = Array.from(new Set(suggestedItems)).filter(item => !items.includes(item));
+
+        if (uniqueSuggestions.length === 0) {
+            alert('目前沒有新的建議項目！');
+            return;
+        }
+
+        if (confirm(`AI 建議新增以下 ${uniqueSuggestions.length} 個項目：\n\n${uniqueSuggestions.join('\n')}\n\n是否加入？`)) {
+            const newItems = [...items, ...uniqueSuggestions];
+            await setDoc(doc(db, "trips", "checklist"), { items: newItems });
+        }
+    };
+
     const progress = items.length > 0 ? Math.round((Object.values(checkedItems).filter(Boolean).length / items.length) * 100) : 0;
 
     return (
@@ -93,7 +137,15 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
                         <CheckSquare size={20} className="text-gray-600" />
                         行前檢查清單
                     </h3>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={generateSmartChecklist}
+                            className="p-1.5 rounded-full text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center gap-1 text-xs font-bold mr-2"
+                            title="AI 智慧建議"
+                        >
+                            <Wand2 size={16} />
+                            <span className="hidden sm:inline">AI 建議</span>
+                        </button>
                         <button
                             onClick={() => setIsLocalEditing(!isLocalEditing)}
                             className={clsx(
