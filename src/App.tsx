@@ -9,6 +9,7 @@ import { MapView } from './components/map/MapView';
 import AIChatWidget from './components/ai/AIChatWidget';
 import WeatherCard from './components/weather/WeatherCard';
 import AdminManager from './components/auth/AdminManager';
+import IdeaPool from './components/itinerary/IdeaPool';
 import { useItinerary } from './hooks/useItinerary';
 import { useWallet } from './hooks/useWallet';
 import { useAuth } from './hooks/useAuth';
@@ -23,6 +24,7 @@ function App() {
     const [isEditing, setIsEditing] = useState(false);
     const [isWalletOpen, setIsWalletOpen] = useState(false);
     const [isAdminManagerOpen, setIsAdminManagerOpen] = useState(false);
+    const [isIdeaPoolOpen, setIsIdeaPoolOpen] = useState(false);
 
     // Auth State
     const { user, login, logout, loading: authLoading, isUserAdmin, adminList } = useAuth();
@@ -34,10 +36,14 @@ function App() {
 
     const {
         itinerary,
+        unassignedActivities,
         addActivity,
         updateActivity,
         removeActivity,
         moveActivity,
+        addToIdeaPool,
+        removeFromIdeaPool,
+        moveFromPoolToDay,
         exportItinerary,
         importItinerary
     } = useItinerary();
@@ -162,6 +168,7 @@ function App() {
                     onImport={importItinerary}
                     onOpenWallet={() => setIsWalletOpen(true)}
                     onOpenSettings={() => setIsAdminManagerOpen(true)}
+                    onOpenIdeaPool={() => setIsIdeaPoolOpen(true)}
                     user={user}
                     isAdmin={isUserAdmin}
                     onLogin={login}
@@ -316,6 +323,16 @@ function App() {
                     onClose={() => setIsAdminManagerOpen(false)}
                     currentAdmins={adminList}
                     currentUserEmail={user?.email}
+                />
+
+                <IdeaPool
+                    isOpen={isIdeaPoolOpen}
+                    onClose={() => setIsIdeaPoolOpen(false)}
+                    items={unassignedActivities}
+                    days={itinerary}
+                    onAdd={addToIdeaPool}
+                    onRemove={removeFromIdeaPool}
+                    onMoveToDay={moveFromPoolToDay}
                 />
             </div>
         </div>

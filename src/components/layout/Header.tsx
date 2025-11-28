@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plane, Download, CreditCard, LogOut, Shield } from 'lucide-react';
+import { Plane, Download, CreditCard, LogOut, Shield, Lightbulb } from 'lucide-react';
 import { differenceInDays, differenceInHours, differenceInMinutes } from 'date-fns';
 import { User } from 'firebase/auth';
 
@@ -10,13 +10,14 @@ interface HeaderProps {
     onImport?: (file: File) => void;
     onOpenWallet?: () => void;
     onOpenSettings?: () => void;
+    onOpenIdeaPool?: () => void;
     user: User | null;
     isAdmin?: boolean;
     onLogin: () => void;
     onLogout: () => void;
 }
 
-export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, user, isAdmin, onLogin, onLogout }: HeaderProps) {
+export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
@@ -140,6 +141,9 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                                     </button>
                                     <button onClick={onOpenWallet} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Wallet">
                                         <CreditCard size={18} />
+                                    </button>
+                                    <button onClick={onOpenIdeaPool} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-amber-400 hover:text-amber-500 transition-colors" title="Idea Pool">
+                                        <Lightbulb size={18} />
                                     </button>
                                     {isAdmin && (
                                         <>

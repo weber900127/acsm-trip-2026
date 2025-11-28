@@ -6,6 +6,7 @@ import { db } from '../lib/firebase';
 export function useItinerary() {
     const [itinerary, setItinerary] = useState<DayPlan[]>(defaultData);
     const [loading, setLoading] = useState(true);
+    const [unassignedActivities, setUnassignedActivities] = useState<Activity[]>([]);
 
     // Use different document for dev vs prod to prevent overwriting production data
     const DOC_ID = import.meta.env.DEV ? "dev" : "main";
@@ -14,10 +15,12 @@ export function useItinerary() {
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "trips", DOC_ID), (docSnap) => {
             if (docSnap.exists()) {
-                setItinerary(docSnap.data().days as DayPlan[]);
+                const data = docSnap.data();
+                setItinerary(data.days as DayPlan[]);
+                setUnassignedActivities((data.unassigned as Activity[]) || []);
             } else {
                 // First time initialization: upload default data
-                setDoc(doc(db, "trips", DOC_ID), { days: defaultData });
+                setDoc(doc(db, "trips", DOC_ID), { days: defaultData, unassigned: [] });
             }
             setLoading(false);
         }, (error) => {
@@ -29,9 +32,9 @@ export function useItinerary() {
     }, []);
 
     // Helper to save changes to Firestore
-    const saveToFirestore = async (newItinerary: DayPlan[]) => {
+    const saveToFirestore = async (newItinerary: DayPlan[], newUnassigned: Activity[]) => {
         try {
-            await setDoc(doc(db, "trips", DOC_ID), { days: newItinerary });
+            await setDoc(doc(db, "trips", DOC_ID), { days: newItinerary, unassigned: newUnassigned });
         } catch (error) {
             console.error("Error saving to Firestore:", error);
             alert("儲存失敗，請檢查網路連線");
@@ -56,7 +59,7 @@ export function useItinerary() {
             }
             return day;
         });
-        saveToFirestore(newItinerary);
+        saveToFirestore(newItinerary, unassignedActivities);
     };
 
     const removeActivity = (dayId: string, index: number) => {
@@ -68,7 +71,7 @@ export function useItinerary() {
             }
             return day;
         });
-        saveToFirestore(newItinerary);
+        saveToFirestore(newItinerary, unassignedActivities);
     };
 
     const updateActivity = (dayId: string, index: number, updatedActivity: Activity) => {
@@ -80,7 +83,7 @@ export function useItinerary() {
             }
             return day;
         });
-        saveToFirestore(newItinerary);
+        saveToFirestore(newItinerary, unassignedActivities);
     };
 
     const moveActivity = (fromDayId: string, toDayId: string, activity: Activity, index?: number) => {
@@ -101,7 +104,35 @@ export function useItinerary() {
             }
             return day;
         });
-        saveToFirestore(newItinerary);
+        saveToFirestore(newItinerary, unassignedActivities);
+    };
+
+    // Idea Pool Operations
+    const addToIdeaPool = (activity: Activity) => {
+        const newUnassigned = [...unassignedActivities, activity];
+        saveToFirestore(itinerary, newUnassigned);
+    };
+
+    const removeFromIdeaPool = (index: number) => {
+        const newUnassigned = [...unassignedActivities];
+        newUnassigned.splice(index, 1);
+        saveToFirestore(itinerary, newUnassigned);
+    };
+
+    const moveFromPoolToDay = (poolIndex: number, dayId: string) => {
+        const activity = unassignedActivities[poolIndex];
+        const newUnassigned = [...unassignedActivities];
+        newUnassigned.splice(poolIndex, 1);
+
+        const newItinerary = itinerary.map(day => {
+            if (day.id === dayId) {
+                const newActivities = [...day.activities, activity];
+                return { ...day, activities: sortActivities(newActivities) };
+            }
+            return day;
+        });
+
+        saveToFirestore(newItinerary, newUnassigned);
     };
 
     // Deprecated - kept for backwards compatibility but does nothing (auto-sorting is now enforced)
@@ -111,12 +142,12 @@ export function useItinerary() {
 
     const resetItinerary = () => {
         if (confirm('確定要重置所有行程嗎？這將會覆蓋雲端上的資料。')) {
-            saveToFirestore(defaultData);
+            saveToFirestore(defaultData, []);
         }
     };
 
     const exportItinerary = () => {
-        const dataStr = JSON.stringify(itinerary, null, 2);
+        const dataStr = JSON.stringify({ days: itinerary, unassigned: unassignedActivities }, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -134,8 +165,13 @@ export function useItinerary() {
             try {
                 const result = e.target?.result as string;
                 const parsed = JSON.parse(result);
+
+                // Handle legacy format (array only) or new format (object with days/unassigned)
                 if (Array.isArray(parsed)) {
-                    saveToFirestore(parsed);
+                    saveToFirestore(parsed, []);
+                    alert('行程匯入成功並已同步至雲端！');
+                } else if (parsed.days && Array.isArray(parsed.days)) {
+                    saveToFirestore(parsed.days, parsed.unassigned || []);
                     alert('行程匯入成功並已同步至雲端！');
                 } else {
                     alert('檔案格式錯誤：內容必須是行程陣列。');
@@ -150,12 +186,16 @@ export function useItinerary() {
 
     return {
         itinerary,
+        unassignedActivities,
         loading,
         addActivity,
         removeActivity,
         updateActivity,
         reorderActivity,
         moveActivity,
+        addToIdeaPool,
+        removeFromIdeaPool,
+        moveFromPoolToDay,
         resetItinerary,
         exportItinerary,
         importItinerary
