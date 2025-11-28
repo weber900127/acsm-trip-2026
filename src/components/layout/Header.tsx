@@ -114,7 +114,7 @@ export default function Header({ isEditing, onExport, onOpenWallet, onOpenSettin
                                 {/* User Avatar Stamp */}
                                 {user ? (
                                     <div className="relative group cursor-pointer" title={user.displayName || user.email || ''}>
-                                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 overflow-hidden shadow-sm grayscale hover:grayscale-0 transition-all">
+                                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 overflow-hidden shadow-sm transition-all">
                                             {user.photoURL ? (
                                                 <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
                                             ) : (
