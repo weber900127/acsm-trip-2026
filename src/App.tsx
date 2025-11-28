@@ -134,7 +134,7 @@ function App() {
 
     return (
         <div className="min-h-screen bg-sunset-animated pb-12 font-sans text-gray-900 relative overflow-x-hidden">
-            {/* Background Overlay for better text contrast */}
+            {/* Background Overlay for better text contrast - Force Rebuild */}
             <div className="fixed inset-0 bg-white/30 pointer-events-none z-0"></div>
 
             <div className="relative z-10">
