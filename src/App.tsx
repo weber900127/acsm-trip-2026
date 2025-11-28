@@ -154,24 +154,37 @@ function App() {
                 <main className="max-w-3xl mx-auto px-4 -mt-6 relative z-20">
 
                     {/* Navigation Tabs */}
-                    <div className="flex overflow-x-auto gap-2 pb-4 scrollbar-hide mb-4 no-scrollbar">
+                    {/* Navigation Tabs - Scrapbook Style */}
+                    <div className="flex overflow-x-auto gap-3 pb-4 scrollbar-hide mb-6 no-scrollbar px-2">
                         {[
-                            { id: 'ALL', label: '全部行程' },
-                            { id: 'SF', label: '舊金山 (5/20-25)' },
-                            { id: 'SLC', label: '鹽湖城 (5/25-30)' },
-                            { id: 'SAN', label: '聖地亞哥 (5/30-6/4)' }
+                            { id: 'ALL', label: 'All Trips' },
+                            { id: 'SF', label: 'San Francisco' },
+                            { id: 'SLC', label: 'Salt Lake City' },
+                            { id: 'SAN', label: 'San Diego' }
                         ].map(tab => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as any)}
                                 className={clsx(
-                                    "px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all shadow-sm border",
+                                    "px-5 py-2 whitespace-nowrap text-sm font-bold transition-all relative group",
                                     activeTab === tab.id
-                                        ? "bg-white text-indigo-600 ring-2 ring-indigo-500 border-transparent z-10"
-                                        : "bg-white/80 text-gray-600 hover:bg-white border-transparent hover:border-gray-200"
+                                        ? "text-white transform -rotate-1"
+                                        : "text-gray-600 hover:text-gray-900 hover:rotate-1"
                                 )}
                             >
-                                {tab.label}
+                                {/* Ticket Shape Background */}
+                                <div className={clsx(
+                                    "absolute inset-0 border-2 border-dashed rounded-lg -z-10 transition-all",
+                                    activeTab === tab.id
+                                        ? "bg-gray-800 border-gray-800 shadow-md"
+                                        : "bg-white border-gray-300 group-hover:border-gray-400"
+                                )}></div>
+
+                                {/* Holes for ticket look */}
+                                <div className={clsx("absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--paper-bg)] border-r border-gray-300", activeTab === tab.id && "border-transparent")}></div>
+                                <div className={clsx("absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--paper-bg)] border-l border-gray-300", activeTab === tab.id && "border-transparent")}></div>
+
+                                <span className="font-heading tracking-wide uppercase">{tab.label}</span>
                             </button>
                         ))}
                     </div>

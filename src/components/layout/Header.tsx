@@ -152,11 +152,11 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                     </div>
                 </div>
 
-                {/* Countdown Post-it */}
-                <div className="absolute -bottom-6 right-8 md:-right-4 paper-note p-4 w-32 text-center transform rotate-3 z-20">
-                    <div className="w-2 h-2 rounded-full bg-red-400 mx-auto mb-2 shadow-sm"></div>
-                    <div className="font-hand text-xl leading-none mb-1 text-gray-600">Countdown</div>
-                    <div className="font-heading text-3xl font-bold text-gray-800">{timeLeft.days}<span className="text-sm font-sans font-normal text-gray-500 ml-1">days</span></div>
+                {/* Countdown Post-it - Moved to avoid overlapping buttons */}
+                <div className="absolute -bottom-10 left-4 md:-left-6 paper-note p-3 w-28 text-center transform -rotate-2 z-0 hidden md:block">
+                    <div className="w-2 h-2 rounded-full bg-red-400 mx-auto mb-1 shadow-sm"></div>
+                    <div className="font-hand text-lg leading-none mb-0.5 text-gray-600">Countdown</div>
+                    <div className="font-heading text-2xl font-bold text-gray-800">{timeLeft.days}<span className="text-xs font-sans font-normal text-gray-500 ml-1">days</span></div>
                 </div>
             </div>
         </header>
