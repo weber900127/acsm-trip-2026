@@ -68,7 +68,7 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
 
 
     return (
-        <header className="relative pt-8 pb-12 px-4 overflow-hidden">
+        <header className="relative pt-8 pb-12 px-4">
             <div className="max-w-4xl mx-auto relative z-10">
                 {/* Ticket Container */}
                 <div className="bg-white p-6 md:p-8 shadow-lg transform rotate-1 border-2 border-gray-200 relative mx-4 md:mx-0" style={{ backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
@@ -178,8 +178,8 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                     </div>
                 </div>
 
-                {/* Countdown Post-it - Moved to top-center to utilize empty space */}
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 -rotate-2 paper-note p-3 w-28 text-center z-20 hidden md:block shadow-md">
+                {/* Countdown Post-it - Moved to bottom-right as requested */}
+                <div className="absolute -bottom-10 -right-6 paper-note p-3 w-28 text-center transform rotate-12 z-20 hidden md:block shadow-md">
                     <div className="w-2 h-2 rounded-full bg-red-400 mx-auto mb-1 shadow-sm"></div>
                     <div className="font-hand text-lg leading-none mb-0.5 text-gray-600">Countdown</div>
                     <div className="font-heading text-2xl font-bold text-gray-800">{timeLeft.days}<span className="text-xs font-sans font-normal text-gray-500 ml-1">days</span></div>
