@@ -128,9 +128,11 @@ function App() {
         }
     };
 
-    if (authLoading) {
-        return <div className="min-h-screen flex items-center justify-center bg-gray-50">Loading...</div>;
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center bg-[var(--paper-bg)] text-gray-500 font-hand text-xl">Loading your memories...</div>;
     }
+
+    console.log("Scrapbook Theme Loaded v2");
 
     return (
         <div className="min-h-screen pb-12 relative overflow-x-hidden">
