@@ -169,10 +169,11 @@ export default function DayCard({
 
                                                     {/* Travel Time Estimator */}
                                                     {distanceInfo && (
-                                                        <div className="absolute left-4 bottom-[-24px] transform -translate-x-1/2 z-10 bg-white border border-gray-200 rounded-full px-2 py-0.5 text-[10px] text-gray-500 flex items-center gap-1 shadow-sm whitespace-nowrap">
-                                                            <span>🚗 {distanceInfo.dist} km</span>
-                                                            <span className="text-gray-300">|</span>
-                                                            <span>~{distanceInfo.time} min</span>
+                                                        <div className="absolute left-4 bottom-[-24px] transform -translate-x-1/2 z-10 bg-white border-2 border-indigo-100 rounded-full px-3 py-1 text-xs font-bold text-indigo-600 flex items-center gap-1.5 shadow-md whitespace-nowrap group-hover/time:scale-110 transition-transform">
+                                                            <span className="bg-indigo-100 p-0.5 rounded-full">🚗</span>
+                                                            <span>{distanceInfo.dist} km</span>
+                                                            <span className="text-indigo-200">|</span>
+                                                            <span>約 {distanceInfo.time} 分鐘</span>
                                                         </div>
                                                     )}
                                                 </div>
