@@ -16,7 +16,7 @@ interface HeaderProps {
     onLogout: () => void;
 }
 
-export default function Header({ isEditing, onExport, onOpenWallet, onOpenSettings, user, isAdmin, onLogin, onLogout }: HeaderProps) {
+export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet, onOpenSettings, user, isAdmin, onLogin, onLogout }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
     const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
@@ -142,9 +142,17 @@ export default function Header({ isEditing, onExport, onOpenWallet, onOpenSettin
                                         <CreditCard size={18} />
                                     </button>
                                     {isAdmin && (
-                                        <button onClick={onOpenSettings} className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${isEditing ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-300 text-gray-500 hover:border-gray-800 hover:text-gray-800'}`} title="Admin Settings">
-                                            <Shield size={18} />
-                                        </button>
+                                        <>
+                                            <button onClick={onToggleEdit} className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-colors ${isEditing ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-300 text-gray-500 hover:border-gray-800 hover:text-gray-800'}`} title="Toggle Edit Mode">
+                                                <div className="relative">
+                                                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full opacity-0 transition-opacity" style={{ opacity: isEditing ? 1 : 0 }}></div>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></svg>
+                                                </div>
+                                            </button>
+                                            <button onClick={onOpenSettings} className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-gray-800 hover:text-gray-800 transition-colors" title="Admin Settings">
+                                                <Shield size={18} />
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>

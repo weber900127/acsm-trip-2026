@@ -20,6 +20,11 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingText, setEditingText] = useState('');
 
+    const [isLocalEditing, setIsLocalEditing] = useState(false);
+
+    // Effective editing state: either global or local
+    const isEffectiveEditing = isEditing || isLocalEditing;
+
     // Load items from Firestore
     useEffect(() => {
         const unsubscribe = onSnapshot(doc(db, "trips", "checklist"), (docSnap) => {
@@ -41,7 +46,7 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
     }, [checkedItems]);
 
     const toggleItem = (item: string) => {
-        if (isEditing) return; // Prevent checking while editing to avoid confusion
+        if (isEffectiveEditing) return; // Prevent checking while editing to avoid confusion
         setCheckedItems(prev => ({
             ...prev,
             [item]: !prev[item]
@@ -88,7 +93,19 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
                         <CheckSquare size={20} className="text-gray-600" />
                         行前檢查清單
                     </h3>
-                    <span className="text-sm font-bold text-gray-600 font-hand text-lg">{progress}% 完成</span>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsLocalEditing(!isLocalEditing)}
+                            className={clsx(
+                                "p-1.5 rounded-full transition-colors",
+                                isLocalEditing ? "bg-indigo-100 text-indigo-600" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                            )}
+                            title={isLocalEditing ? "完成編輯" : "編輯清單"}
+                        >
+                            <CheckSquare size={16} />
+                        </button>
+                        <span className="text-sm font-bold text-gray-600 font-hand text-lg">{progress}% 完成</span>
+                    </div>
                 </div>
                 {/* Progress Bar */}
                 <div className="w-full bg-gray-200 rounded-full h-2">
@@ -122,14 +139,14 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
                             <label
                                 className={clsx(
                                     "flex items-start gap-3 p-3 rounded-lg transition-all border relative",
-                                    isEditing ? "cursor-default border-dashed border-gray-300" : "cursor-pointer",
-                                    checkedItems[item] && !isEditing
+                                    isEffectiveEditing ? "cursor-default border-dashed border-gray-300" : "cursor-pointer",
+                                    checkedItems[item] && !isEffectiveEditing
                                         ? "bg-gray-50 border-gray-200"
-                                        : !isEditing && "hover:bg-gray-50 border-transparent hover:border-gray-200"
+                                        : !isEffectiveEditing && "hover:bg-gray-50 border-transparent hover:border-gray-200"
                                 )}
                             >
                                 <div className="relative flex items-center mt-0.5">
-                                    {!isEditing && (
+                                    {!isEffectiveEditing && (
                                         <>
                                             <input
                                                 type="checkbox"
@@ -148,12 +165,12 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
                                 </div>
                                 <span className={clsx(
                                     "text-sm transition-colors select-none flex-1 font-hand text-lg",
-                                    checkedItems[item] && !isEditing ? "text-gray-400 line-through decoration-gray-400" : "text-gray-700"
+                                    checkedItems[item] && !isEffectiveEditing ? "text-gray-400 line-through decoration-gray-400" : "text-gray-700"
                                 )}>
                                     {item}
                                 </span>
 
-                                {isEditing && (
+                                {isEffectiveEditing && (
                                     <div className="flex gap-1 ml-2">
                                         <button
                                             onClick={(e) => { e.preventDefault(); startEditing(index, item); }}
@@ -174,7 +191,7 @@ export default function TripChecklist({ isEditing }: TripChecklistProps) {
                     </div>
                 ))}
 
-                {isEditing && (
+                {isEffectiveEditing && (
                     <div className="col-span-1 md:col-span-2 mt-2">
                         {isAdding ? (
                             <div className="flex gap-2 items-center p-3 rounded-lg border-2 border-dashed border-indigo-300 bg-indigo-50">
