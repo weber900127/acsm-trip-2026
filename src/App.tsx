@@ -132,7 +132,7 @@ function App() {
         return <div className="min-h-screen flex items-center justify-center bg-[var(--paper-bg)] text-gray-500 font-hand text-xl">Loading your memories...</div>;
     }
 
-    console.log("Scrapbook Theme Loaded v2");
+    console.log("Scrapbook Theme Loaded v3");
 
     return (
         <div className="min-h-screen pb-12 relative overflow-x-hidden">

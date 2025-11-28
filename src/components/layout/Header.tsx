@@ -116,7 +116,7 @@ export default function Header({ isEditing, onExport, onOpenWallet, onOpenSettin
                                     <div className="relative group cursor-pointer" title={user.displayName || user.email || ''}>
                                         <div className="w-12 h-12 rounded-full border-4 border-gray-200 overflow-hidden shadow-sm transition-all">
                                             {user.photoURL ? (
-                                                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                                                <img src={user.photoURL} alt="User" className="w-full h-full object-cover grayscale-0" />
                                             ) : (
                                                 <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500 font-bold">
                                                     {user.displayName?.[0] || 'U'}
