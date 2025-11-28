@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Save, Paperclip, Image as ImageIcon, Link as LinkIcon, Trash2 } from 'lucide-react';
+import { X, Save, Paperclip, Image as ImageIcon, Link as LinkIcon, Trash2, Wand2 } from 'lucide-react';
 import { Activity, ActivityType, Attachment, DayPlan } from '../../data/itinerary';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -141,6 +141,47 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
         }));
     };
 
+    const generateSmartNotes = () => {
+        let notes = '';
+        const type = formData.type;
+        const title = formData.title.toLowerCase();
+
+        switch (type) {
+            case 'flight':
+                notes = '記得提前 2-3 小時抵達機場報到。檢查護照效期 (至少 6 個月)。確認托運行李與隨身行李額度。下載航空公司 App 以便隨時查看航班動態。';
+                break;
+            case 'transport':
+                if (title.includes('uber') || title.includes('lyft')) {
+                    notes = '確認上車地點與車牌號碼。';
+                } else if (title.includes('train') || title.includes('rail')) {
+                    notes = '確認月台資訊與發車時間。建議提前 15 分鐘抵達車站。';
+                } else {
+                    notes = '預留緩衝時間以防塞車。確認票券是否需列印或可使用電子票證。';
+                }
+                break;
+            case 'food':
+                notes = '建議提前訂位。美國餐廳通常需支付 15-20% 小費。確認是否有特殊飲食限制 (如過敏)。';
+                break;
+            case 'sightseeing':
+                notes = '確認景點開放時間與休館日。建議穿著舒適好走的鞋子。攜帶水壺與防曬用品。檢查是否需要事先預約門票。';
+                break;
+            case 'hotel':
+                notes = '入住時間 (Check-in) 通常為 15:00，退房時間 (Check-out) 通常為 11:00。準備信用卡以支付押金。確認是否提供免費早餐與 Wi-Fi。';
+                break;
+            case 'conference':
+                notes = '記得攜帶識別證 (Badge) 與名片。確認議程與會議室位置。準備筆記本或平板電腦。';
+                break;
+            default:
+                notes = '確認行程細節與聯絡方式。';
+        }
+
+        if (formData.tips && !confirm('原本的備註將被覆蓋，確定要產生新的建議嗎？')) {
+            return;
+        }
+
+        setFormData(prev => ({ ...prev, tips: notes }));
+    };
+
     const TIMEZONES = [
         { value: '(TPE)', label: '台北 (TPE)' },
         { value: '(SFO)', label: '舊金山 (SFO)' },
@@ -276,12 +317,24 @@ export default function ActivityFormModal({ isOpen, onClose, onSave, initialData
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">備註/小撇步 (選填)</label>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <label className="block text-sm font-medium text-gray-700">備註/小撇步 (選填)</label>
+                                            <button
+                                                type="button"
+                                                onClick={generateSmartNotes}
+                                                className="text-xs flex items-center gap-1 text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded-full transition-colors"
+                                                title="自動產生建議"
+                                            >
+                                                <Wand2 size={12} />
+                                                <span>AI 建議</span>
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
                                             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
                                             value={formData.tips || ''}
                                             onChange={e => setFormData({ ...formData, tips: e.target.value })}
+                                            placeholder="例如：記得帶護照、提前訂位..."
                                         />
                                     </div>
 
