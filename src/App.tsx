@@ -128,7 +128,7 @@ function App() {
         }
     };
 
-    if (loading) {
+    if (authLoading) {
         return <div className="min-h-screen flex items-center justify-center bg-[var(--paper-bg)] text-gray-500 font-hand text-xl">Loading your memories...</div>;
     }
 
