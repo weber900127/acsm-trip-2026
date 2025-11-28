@@ -178,8 +178,8 @@ export default function Header({ isEditing, onToggleEdit, onExport, onOpenWallet
                     </div>
                 </div>
 
-                {/* Countdown Post-it - Moved to top-left to avoid blocking 'Save the date' */}
-                <div className="absolute -top-6 -left-2 md:-left-8 paper-note p-3 w-28 text-center transform -rotate-6 z-20 hidden md:block shadow-md">
+                {/* Countdown Post-it - Moved to top-center to utilize empty space */}
+                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 -rotate-2 paper-note p-3 w-28 text-center z-20 hidden md:block shadow-md">
                     <div className="w-2 h-2 rounded-full bg-red-400 mx-auto mb-1 shadow-sm"></div>
                     <div className="font-hand text-lg leading-none mb-0.5 text-gray-600">Countdown</div>
                     <div className="font-heading text-2xl font-bold text-gray-800">{timeLeft.days}<span className="text-xs font-sans font-normal text-gray-500 ml-1">days</span></div>
