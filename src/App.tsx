@@ -11,6 +11,7 @@ import WeatherCard from './components/weather/WeatherCard';
 import AdminManager from './components/auth/AdminManager';
 import IdeaPool from './components/itinerary/IdeaPool';
 import { useItinerary } from './hooks/useItinerary';
+import { useWeather } from './hooks/useWeather';
 import { useWallet } from './hooks/useWallet';
 import { useAuth } from './hooks/useAuth';
 import { Activity } from './data/itinerary';
@@ -58,6 +59,9 @@ function App() {
         removeWalletItem,
         getTotalCost: getWalletCost
     } = useWallet();
+
+    // Fetch weather for active tab
+    const { weather, loading: weatherLoading } = useWeather(activeTab);
 
     const toggleDay = (dayId: string) => {
         setExpandedDays(prev => ({
@@ -218,13 +222,15 @@ function App() {
                         ))}
                     </div>
 
+
                     {/* Weather Card */}
                     <AnimatePresence mode="wait">
-                        {activeTab !== 'ALL' && CITY_WEATHER[activeTab] && (
+                        {activeTab !== 'ALL' && (
                             <WeatherCard
                                 key={activeTab}
                                 city={activeTab}
-                                info={CITY_WEATHER[activeTab]}
+                                info={weather || CITY_WEATHER[activeTab]}
+                                loading={weatherLoading}
                             />
                         )}
                     </AnimatePresence>

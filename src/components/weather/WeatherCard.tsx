@@ -1,23 +1,38 @@
-import { CloudSun, Sun, CloudFog, Shirt, Thermometer } from 'lucide-react';
+import { CloudSun, Sun, CloudFog, Shirt, Thermometer, CloudRain, Snowflake } from 'lucide-react';
 import { WeatherInfo } from '../../data/weather';
 import { motion } from 'framer-motion';
 
 interface WeatherCardProps {
     city: string;
     info: WeatherInfo;
+    loading?: boolean;
 }
 
-export default function WeatherCard({ info }: WeatherCardProps) {
+export default function WeatherCard({ info, loading }: WeatherCardProps) {
     const getIcon = (iconName: string) => {
         switch (iconName) {
             case 'fog': return CloudFog;
             case 'sun': return Sun;
             case 'cloud-sun': return CloudSun;
+            case 'rain': return CloudRain;
+            case 'snow': return Snowflake;
             default: return Sun;
         }
     };
 
     const Icon = getIcon(info.icon);
+
+    if (loading) {
+        return (
+            <div className="sticker p-4 mb-6 flex items-center gap-4 animate-pulse">
+                <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.div
