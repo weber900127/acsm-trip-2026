@@ -40,6 +40,8 @@ const CATEGORY_LABELS: Record<WalletCategory, string> = {
 export default function WalletModal({ isOpen, onClose, items, onAdd, onUpdate, onRemove, totalCost }: WalletModalProps) {
     const [activeTab, setActiveTab] = useState<'list' | 'analytics'>('list');
     const [isAdding, setIsAdding] = useState(false);
+    const [exchangeRate, setExchangeRate] = useState(32.5);
+    const [showTWD, setShowTWD] = useState(false);
     const [editingItemId, setEditingItemId] = useState<string | null>(null);
     const [formData, setFormData] = useState<Omit<WalletItem, 'id'>>({
         category: 'other',
@@ -124,10 +126,37 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onUpdate, o
                                 </div>
 
                                 <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/10">
-                                    <div className="text-xs text-slate-300 uppercase tracking-wider font-medium mb-1">總預估花費 (行程 + 錢包)</div>
+                                    <div className="flex justify-between items-start mb-1">
+                                        <div className="text-xs text-slate-300 uppercase tracking-wider font-medium">總預估花費 (行程 + 錢包)</div>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => setShowTWD(!showTWD)}
+                                                className={`text-xs px-2 py-0.5 rounded border transition-colors ${showTWD ? 'bg-amber-400 text-slate-900 border-amber-400 font-bold' : 'text-slate-400 border-slate-600 hover:border-slate-400'}`}
+                                            >
+                                                NT$
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div className="text-3xl font-bold text-white font-mono">
                                         ${totalCost.toLocaleString()} <span className="text-lg text-slate-400">USD</span>
                                     </div>
+                                    {showTWD && (
+                                        <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center">
+                                            <div className="text-amber-400 font-mono font-bold text-xl">
+                                                ≈ NT$ {Math.round(totalCost * exchangeRate).toLocaleString()}
+                                            </div>
+                                            <div className="flex items-center gap-1 text-xs text-slate-400">
+                                                <span>匯率:</span>
+                                                <input
+                                                    type="number"
+                                                    value={exchangeRate}
+                                                    onChange={(e) => setExchangeRate(Number(e.target.value))}
+                                                    className="w-12 bg-slate-800 border border-slate-600 rounded px-1 py-0.5 text-white text-right outline-none focus:border-amber-400"
+                                                    step="0.1"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -246,7 +275,12 @@ export default function WalletModal({ isOpen, onClose, items, onAdd, onUpdate, o
                                                             <div className="flex justify-between items-start">
                                                                 <h4 className="font-bold text-gray-800 truncate">{item.title}</h4>
                                                                 {item.cost ? (
-                                                                    <span className="font-mono font-medium text-gray-900">${item.cost.toLocaleString()}</span>
+                                                                    <div className="text-right">
+                                                                        <div className="font-mono font-medium text-gray-900">${item.cost.toLocaleString()}</div>
+                                                                        {showTWD && (
+                                                                            <div className="text-xs text-gray-500 font-mono">≈ NT$ {Math.round(item.cost * exchangeRate).toLocaleString()}</div>
+                                                                        )}
+                                                                    </div>
                                                                 ) : null}
                                                             </div>
                                                             <div className="text-sm text-indigo-600 font-mono mt-0.5">{item.reference}</div>
