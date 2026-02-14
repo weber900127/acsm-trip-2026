@@ -23,9 +23,10 @@ interface HeaderProps {
 export default function Header({ isEditing, onToggleEdit, onExport, onShare, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout, onUndo, canUndo }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
-    const [startDate, setStartDate] = useState<Date>(new Date('2026-05-21T00:00:00'));
-    const [endDate, setEndDate] = useState<Date>(new Date('2026-05-31T00:00:00'));
+    const [startDate] = useState<Date>(new Date('2026-05-21T00:00:00'));
+    const [endDate] = useState<Date>(new Date('2026-05-31T00:00:00'));
 
+    /*
     useEffect(() => {
         // Fetch start date from settings
         const fetchSettings = async () => {
@@ -48,6 +49,7 @@ export default function Header({ isEditing, onToggleEdit, onExport, onShare, onO
         };
         fetchSettings();
     }, []);
+    */
 
     useEffect(() => {
         const calculateTimeLeft = () => {
