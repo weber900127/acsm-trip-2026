@@ -21,7 +21,7 @@ import { AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 
 function App() {
-    const [activeTab, setActiveTab] = useState<'ALL' | 'SF' | 'SLC' | 'SAN' | 'LA'>('ALL');
+    const [activeTab, setActiveTab] = useState<'ALL' | 'SF' | 'SLC'>('ALL');
     const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>({ 'day1': true });
     const [isEditing, setIsEditing] = useState(false);
     const [isWalletOpen, setIsWalletOpen] = useState(false);
@@ -74,7 +74,7 @@ function App() {
 
     const filteredItinerary = activeTab === 'ALL'
         ? itinerary
-        : itinerary.filter(day => day.city === activeTab || (activeTab === 'LA' && day.city === 'LA'));
+        : itinerary.filter(day => day.city === activeTab);
 
     // Calculate Total Trip Cost
     const totalItineraryCost = itinerary.reduce((sum, day) => {
@@ -195,8 +195,7 @@ function App() {
                         {[
                             { id: 'ALL', label: 'All Trips' },
                             { id: 'SF', label: 'San Francisco' },
-                            { id: 'SLC', label: 'Salt Lake City' },
-                            { id: 'SAN', label: 'San Diego' }
+                            { id: 'SLC', label: 'Salt Lake City' }
                         ].map(tab => (
                             <button
                                 key={tab.id}
