@@ -23,8 +23,8 @@ interface HeaderProps {
 export default function Header({ isEditing, onToggleEdit, onExport, onShare, onOpenWallet, onOpenSettings, onOpenIdeaPool, user, isAdmin, onLogin, onLogout, onUndo, canUndo }: HeaderProps) {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
-    const [startDate, setStartDate] = useState<Date>(new Date('2026-05-20T00:00:00'));
-    const [endDate, setEndDate] = useState<Date>(new Date('2026-06-04T00:00:00'));
+    const [startDate, setStartDate] = useState<Date>(new Date('2026-05-21T00:00:00'));
+    const [endDate, setEndDate] = useState<Date>(new Date('2026-05-31T00:00:00'));
 
     useEffect(() => {
         // Fetch start date from settings
@@ -96,10 +96,8 @@ export default function Header({ isEditing, onToggleEdit, onExport, onShare, onO
                                 <span>SF</span>
                                 <Plane size={16} className="text-gray-400" />
                                 <span>SLC</span>
-                                <Plane size={16} className="text-gray-400" />
-                                <span>SAN</span>
-                                <Plane size={16} className="text-gray-400" />
-                                <span>LA</span>
+                                <Plane size={16} className="text-gray-400 transform rotate-180" />
+                                <span>SF</span>
                             </div>
                         </div>
 

@@ -37,7 +37,7 @@ export default function TimeZoneCard({ className }: TimeZoneCardProps) {
 
     const zones = [
         { label: '台北 (Home)', zone: 'Asia/Taipei', code: 'TPE' },
-        { label: '美西 (Trip)', zone: 'America/Los_Angeles', code: 'PST' }
+        { label: '美西 (Trip)', zone: 'America/Los_Angeles', code: 'PDT' }
     ];
 
     return (
