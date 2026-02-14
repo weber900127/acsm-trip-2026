@@ -12,7 +12,7 @@ export function useItinerary() {
     const [past, setPast] = useState<{ days: DayPlan[], unassigned: Activity[] }[]>([]);
 
     // Use different document for dev vs prod to prevent overwriting production data
-    const DOC_ID = import.meta.env.DEV ? "dev" : "main";
+    const DOC_ID = import.meta.env.DEV ? "dev_f2" : "main_f2";
 
     // Subscribe to Firestore updates
     useEffect(() => {
@@ -164,11 +164,18 @@ export function useItinerary() {
         saveToFirestore(newItinerary, newUnassigned);
     };
 
-    const updateDayInfo = (dayId: string, title: string, summary: string) => {
+    const updateDayInfo = (dayId: string, title: string, summary: string, date?: string, cityLabel?: string, city?: DayPlan['city']) => {
         saveToHistory();
         const newItinerary = itinerary.map(day => {
             if (day.id === dayId) {
-                return { ...day, title, summary };
+                return {
+                    ...day,
+                    title,
+                    summary,
+                    ...(date !== undefined ? { date } : {}),
+                    ...(cityLabel !== undefined ? { cityLabel } : {}),
+                    ...(city !== undefined ? { city } : {})
+                };
             }
             return day;
         });

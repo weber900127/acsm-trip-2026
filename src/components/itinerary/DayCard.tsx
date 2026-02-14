@@ -16,7 +16,7 @@ interface DayCardProps {
     onRemoveActivity?: (index: number) => void;
     onActivityFocus?: (id: string) => void;
     highlightedActivityId?: string | null;
-    onUpdateDayInfo?: (title: string, summary: string) => void;
+    onUpdateDayInfo?: (title: string, summary: string, date?: string, cityLabel?: string, city?: DayPlan['city']) => void;
 }
 
 export default function DayCard({
@@ -86,13 +86,44 @@ export default function DayCard({
             >
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-3 border-b-2 border-gray-100 pb-2">
-                        <span className="font-hand text-xl font-bold text-gray-500 transform -rotate-2">
-                            {day.date}
-                        </span>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={day.date}
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={(e) => onUpdateDayInfo?.(day.title, day.summary, e.target.value)}
+                                className="font-hand text-xl font-bold text-gray-500 transform -rotate-2 bg-transparent border-b border-gray-300 focus:border-indigo-500 outline-none w-40"
+                            />
+                        ) : (
+                            <span className="font-hand text-xl font-bold text-gray-500 transform -rotate-2">
+                                {day.date}
+                            </span>
+                        )}
                         <div className="flex-1"></div>
-                        <span className="text-xs font-bold tracking-widest uppercase bg-gray-800 text-white px-2 py-1 transform rotate-1">
-                            {day.cityLabel}
-                        </span>
+                        {isEditing ? (
+                            <div className="flex gap-2 transform rotate-1" onClick={(e) => e.stopPropagation()}>
+                                <select
+                                    value={day.city}
+                                    onChange={(e) => onUpdateDayInfo?.(day.title, day.summary, undefined, undefined, e.target.value as DayPlan['city'])}
+                                    className="text-xs font-bold uppercase bg-gray-100 text-gray-800 px-2 py-1 rounded border-none outline-none"
+                                >
+                                    <option value="SF">SF</option>
+                                    <option value="SLC">SLC</option>
+                                    <option value="SAN">SAN</option>
+                                    <option value="LA">LA</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    value={day.cityLabel}
+                                    onChange={(e) => onUpdateDayInfo?.(day.title, day.summary, undefined, e.target.value)}
+                                    className="text-xs font-bold tracking-widest uppercase bg-gray-800 text-white px-2 py-1 w-24 text-center border-none outline-none"
+                                />
+                            </div>
+                        ) : (
+                            <span className="text-xs font-bold tracking-widest uppercase bg-gray-800 text-white px-2 py-1 transform rotate-1">
+                                {day.cityLabel}
+                            </span>
+                        )}
                     </div>
 
                     {isEditing ? (

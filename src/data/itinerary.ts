@@ -41,615 +41,504 @@ export interface DayPlan {
 }
 
 // --- Data ---
+// Version F-2
 export const itineraryData: DayPlan[] = [
-    // --- San Francisco ---
+    // --- Day 1 ---
     {
         id: 'day1',
-        date: '2026/05/19 (二)',
+        date: '2026/05/21',
         city: 'SF',
         cityLabel: '舊金山',
-        title: '啟程與抵達',
-        summary: '搭乘星宇航空跨越換日線，抵達舊金山。',
+        title: '抵達夜',
+        summary: '搭乘星宇航空跨越換日線，抵達舊金山。\n\n🌤️ 天氣/穿搭：晚上偏涼，外套放隨身。',
         activities: [
             {
-                time: '00:50 (TW)',
-                title: '桃園機場起飛',
-                description: '搭乘星宇航空 JX012 航班前往舊金山 (5/20 凌晨出發)。',
+                time: '20:30',
+                title: 'SFO 機場抵達',
+                description: 'JX012 航班抵達。入境與領取行李。',
                 type: 'flight',
                 iconName: 'Plane',
-                coordinates: { lat: 25.0797, lng: 121.2342 },
-                tips: '請於 5/19 晚上 22:50 前抵達機場櫃檯報到。'
-            },
-            {
-                time: '20:30 (US)',
-                title: '抵達 SFO 機場',
-                description: '抵達舊金山國際機場 (當地時間 5/19 晚上)。',
-                type: 'flight',
-                iconName: 'MapPin',
-                tips: '入境排隊時間較長，預計 22:00 出關。',
                 coordinates: { lat: 37.6213, lng: -122.3790 }
             },
             {
-                time: '22:30',
-                title: '前往飯店',
-                description: '搭乘 Uber/Lyft 前往市區飯店休息。',
+                time: '21:40',
+                title: '前往市區 (BART)',
+                description: '搭乘 BART 黃線從 SFO 到 Powell St 站 (約 30 分鐘)。',
                 type: 'transport',
-                iconName: 'Car'
+                iconName: 'Train',
+                tips: '建議下載 Clipper Card 到手機 Wallet。'
             },
             {
-                time: '23:30',
-                title: '飯店 Check-in',
-                description: '入住飯店，調整時差準備明天的行程。',
+                time: '22:45',
+                title: 'Check-in & 休息',
+                description: '入住 Union Square / Powell / Market St 附近飯店。',
                 type: 'hotel',
-                iconName: 'Moon'
+                iconName: 'Moon',
+                location: 'Union Square, San Francisco'
             }
         ]
     },
+    // --- Day 2 ---
     {
         id: 'day2',
-        date: '2026/05/20 (三)',
+        date: '2026/05/22',
         city: 'SF',
-        cityLabel: '舊金山/矽谷',
-        title: '矽谷科技朝聖',
-        summary: '租車南下，造訪 Apple Park、Google 與史丹佛大學。',
+        cityLabel: '舊金山',
+        title: '單車攝影 & 經典地標',
+        summary: '騎單車挑戰金門大橋，下午漫步九曲花街。\n\n🌤️ 天氣/穿搭：SF 風大偏涼/可能霧；防風外套＋長褲＋鏡頭擦拭布。',
         activities: [
             {
-                time: '08:30',
-                title: '取車出發',
-                description: '建議租車一天 (Turo 或 Hertz)，前往 Cupertino。',
+                time: '09:30',
+                title: '租單車',
+                description: '在 Marina / Crissy Field 附近租單車。',
                 type: 'transport',
-                iconName: 'Car',
-                tips: '車程約 50 分鐘，避開通勤高峰早點出發。'
+                iconName: 'Bike',
+                tips: '【CAN BOOK LATER】現場租即可。'
             },
             {
                 time: '10:00',
-                title: 'Apple Park Visitor Center',
-                description: '參觀遊客中心、AR 體驗總部模型、頂樓露台喝咖啡。',
+                title: 'Crissy Field',
+                description: '拍攝金門大橋全景的最佳角度。',
                 type: 'sightseeing',
-                iconName: 'MapPin',
-                location: '10600 N Tantau Ave, Cupertino',
-                tips: '必買獨家 T-shirt。頂樓露台是唯一能清楚看到圓環建築的地方。',
-                coordinates: { lat: 37.3349, lng: -122.0090 }
+                iconName: 'Camera',
+                coordinates: { lat: 37.8040, lng: -122.4655 }
             },
             {
-                time: '12:30',
-                title: '午餐時間',
-                description: '建議在 Main Street Cupertino 附近用餐。',
+                time: '10:30',
+                title: 'Warming Hut',
+                description: '中途休息點，靠近橋下。',
+                type: 'food',
+                iconName: 'Coffee'
+            },
+            {
+                time: '10:50',
+                title: '騎上 Golden Gate Bridge',
+                description: '騎行於橋上，拍攝紅色的橋塔線條。',
+                type: 'sightseeing',
+                iconName: 'Camera',
+                coordinates: { lat: 37.8199, lng: -122.4783 }
+            },
+            {
+                time: '11:20',
+                title: 'Fort Point',
+                description: '橋下的堡壘，拍攝壯觀的仰角。',
+                type: 'sightseeing',
+                iconName: 'Camera',
+                coordinates: { lat: 37.8105, lng: -122.4770 }
+            },
+            {
+                time: '12:15',
+                title: 'Marina 午餐',
+                description: '返回 Marina 區歸還單車並用餐。',
                 type: 'food',
                 iconName: 'Utensils'
             },
             {
                 time: '14:00',
-                title: 'Googleplex & Android Statues',
-                description: '前往 Mountain View 參觀 Google 園區外部與訪客中心。',
+                title: '飯店休息',
+                description: '回飯店備份照片、充電。',
+                type: 'hotel',
+                iconName: 'Moon'
+            },
+            {
+                time: '16:30',
+                title: 'Lombard St (九曲花街)',
+                description: '拍攝彎曲街道與繡球花。',
                 type: 'sightseeing',
                 iconName: 'Camera',
-                location: '1600 Amphitheatre Pkwy, Mountain View',
-                coordinates: { lat: 37.4220, lng: -122.0841 }
-            },
-            {
-                time: '16:00',
-                title: '史丹佛大學',
-                description: '參觀 Main Quad、Hoover Tower 與紀念教堂。',
-                type: 'sightseeing',
-                iconName: 'Briefcase',
-                tips: '校園很大，建議將車停在 Tresidder Parking Lot。',
-                coordinates: { lat: 37.4275, lng: -122.1697 }
-            },
-            {
-                time: '19:00',
-                title: '返回舊金山',
-                description: '晚餐可於 Palo Alto 大學路解決，或回舊金山吃。',
-                type: 'transport',
-                iconName: 'Car'
-            }
-        ]
-    },
-    {
-        id: 'day3',
-        date: '2026/05/22 (五)',
-        city: 'SF',
-        cityLabel: '舊金山',
-        title: '迷霧之城經典巡禮',
-        summary: '金門大橋、藝術宮與九曲花街。',
-        activities: [
-            {
-                time: '09:00',
-                title: '金門大橋 (Golden Gate Bridge)',
-                description: '前往 Welcome Center，或租腳踏車騎行一段。',
-                type: 'sightseeing',
-                iconName: 'Camera',
-                tips: '若想拍明信片角度，建議搭 Uber 到對岸的 Battery Spencer。',
-                coordinates: { lat: 37.8199, lng: -122.4783 }
-            },
-            {
-                time: '11:30',
-                title: '藝術宮 (Palace of Fine Arts)',
-                description: '欣賞羅馬式建築與湖畔美景。',
-                type: 'sightseeing',
-                iconName: 'Camera',
-                coordinates: { lat: 37.8029, lng: -122.4484 }
-            },
-            {
-                time: '14:00',
-                title: '九曲花街 (Lombard Street)',
-                description: '觀賞繡球花盛開的彎曲街道。',
-                type: 'sightseeing',
-                iconName: 'MapPin',
-                tips: '建議搭 Uber 到頂端 (Hyde St)，往下走比較輕鬆。',
                 coordinates: { lat: 37.8021, lng: -122.4187 }
             },
             {
-                time: '16:00',
-                title: '聯合廣場逛街',
-                description: '逛逛 Westfield 或周邊品牌店。',
+                time: '18:00',
+                title: 'North Beach 晚餐',
+                description: '在義大利區享用晚餐。',
+                type: 'food',
+                iconName: 'Utensils'
+            }
+        ]
+    },
+    // --- Day 3 ---
+    {
+        id: 'day3',
+        date: '2026/05/23',
+        city: 'SF',
+        cityLabel: '舊金山/矽谷',
+        title: '矽谷科技巡禮',
+        summary: '南下造訪科技巨頭總部與史丹佛大學。\n\n🌤️ 天氣/穿搭：灣區白天舒服，仍建議短袖＋薄外套。',
+        activities: [
+            {
+                time: '08:40',
+                title: '前往矽谷 (Caltrain)',
+                description: '搭乘 Caltrain 南下。',
+                type: 'transport',
+                iconName: 'Train'
+            },
+            {
+                time: '09:40',
+                title: 'Apple Park Visitor Center',
+                description: '參觀遊客中心、AR 模型、買獨家 T-shirt。',
+                type: 'sightseeing',
+                iconName: 'ShoppingBag',
+                location: 'Cupertino',
+                coordinates: { lat: 37.3349, lng: -122.0090 }
+            },
+            {
+                time: '11:20',
+                title: 'Googleplex',
+                description: '參觀 Android Statues 與訪客中心。',
+                type: 'sightseeing',
+                iconName: 'Camera',
+                location: 'Mountain View',
+                coordinates: { lat: 37.4220, lng: -122.0841 }
+            },
+            {
+                time: '13:20',
+                title: 'Stanford University',
+                description: '漫步 Main Quad、迴廊與紀念教堂。',
+                type: 'sightseeing',
+                iconName: 'Briefcase',
+                coordinates: { lat: 37.4275, lng: -122.1697 }
+            },
+            {
+                time: '17:00',
+                title: '返回舊金山',
+                description: '搭乘 Caltrain 或 Uber 返回市區。',
+                type: 'transport',
+                iconName: 'Train'
+            }
+        ]
+    },
+    // --- Day 4 ---
+    {
+        id: 'day4',
+        date: '2026/05/24',
+        city: 'SF',
+        cityLabel: '舊金山',
+        title: '惡魔島與海灣',
+        summary: '探訪傳奇監獄島，享受悠閒的海濱午後。\n\n🌤️ 天氣/穿搭：船上與島上更冷更風；外套必帶。',
+        activities: [
+            {
+                time: '08:45',
+                title: 'Pier 33 報到',
+                description: '前往 33 號碼頭準備搭船。',
+                type: 'transport',
+                iconName: 'MapPin',
+                tips: '【MUST BOOK EARLY】請務必攜帶護照換票。'
+            },
+            {
+                time: '09:30',
+                title: '惡魔島 (Alcatraz)',
+                description: '登島參觀監獄，包含中文語音導覽。',
+                type: 'sightseeing',
+                iconName: 'Key',
+                coordinates: { lat: 37.8270, lng: -122.4230 }
+            },
+            {
+                time: '13:00',
+                title: 'Ferry Building 午餐',
+                description: '在渡輪大廈享用美食 (生蠔、漢堡、藍瓶咖啡)。',
+                type: 'food',
+                iconName: 'Utensils',
+                coordinates: { lat: 37.7955, lng: -122.3937 }
+            },
+            {
+                time: '15:00',
+                title: '自由活動 / 休息',
+                description: 'Embarcadero 散步或回飯店休息。',
                 type: 'other',
                 iconName: 'Coffee'
             }
         ]
     },
-    {
-        id: 'day4',
-        date: '2026/05/23 (六)',
-        city: 'SF',
-        cityLabel: '舊金山',
-        title: '惡魔島與碼頭',
-        summary: '深入惡魔島監獄，品嚐酸種麵包濃湯。',
-        activities: [
-            {
-                time: '09:30',
-                title: '惡魔島 (Alcatraz) 登島',
-                description: '從 33 號碼頭搭船。需聽語音導覽。',
-                type: 'sightseeing',
-                iconName: 'MapPin',
-                tips: '【極重要】必須在 90 天前官網搶票，現場買不到票。',
-                coordinates: { lat: 37.8270, lng: -122.4230 }
-            },
-            {
-                time: '13:00',
-                title: '39 號碼頭 (Pier 39)',
-                description: '午餐吃 Boudin 酸種麵包湯，看懶洋洋的海獅。',
-                type: 'food',
-                iconName: 'Utensils',
-                coordinates: { lat: 37.8087, lng: -122.4098 }
-            },
-            {
-                time: '15:00',
-                title: '漁人碼頭漫步',
-                description: '參觀 Musee Mecanique (復古遊戲機博物館)。',
-                type: 'sightseeing',
-                iconName: 'Camera'
-            }
-        ]
-    },
+    // --- Day 5 ---
     {
         id: 'day5',
-        date: '2026/05/24 (日)',
+        date: '2026/05/25',
         city: 'SF',
         cityLabel: '舊金山',
-        title: '索薩利托與叮叮車',
-        summary: '搭渡輪前往對岸小鎮，體驗最後的舊金山風情。',
+        title: '二戰與棒球',
+        summary: '參觀自由輪與體驗美國職棒大聯盟賽事。\n\n🌤️ 天氣/穿搭：海邊與球場偏涼；外套帶著。',
         activities: [
             {
                 time: '10:00',
-                title: '搭渡輪往 Sausalito',
-                description: '從 Ferry Building 搭乘 Golden Gate Ferry。',
-                type: 'transport',
-                iconName: 'Plane'
-            },
-            {
-                time: '10:30',
-                title: 'Sausalito 小鎮時光',
-                description: '逛畫廊、吃冰淇淋，眺望舊金山天際線。',
+                title: 'SS Jeremiah O’Brien',
+                description: '參觀二戰諾曼第登陸倖存的自由輪 (Pier 45/35)。',
                 type: 'sightseeing',
-                iconName: 'Sun',
-                coordinates: { lat: 37.8591, lng: -122.4853 }
+                iconName: 'Ship',
+                tips: '【CAN BOOK LATER】'
             },
             {
-                time: '14:00',
-                title: '返回並搭乘叮叮車',
-                description: '體驗 Powell-Hyde 線。',
+                time: '11:30',
+                title: 'Embarcadero 午餐',
+                description: '快速午餐，準備前往球場。',
+                type: 'food',
+                iconName: 'Utensils'
+            },
+            {
+                time: '12:35',
+                title: 'Oracle Park',
+                description: '球場開門，提早入場拍攝美麗的海灣球場。',
                 type: 'sightseeing',
-                iconName: 'Train',
-                tips: '排隊人潮眾多，建議從中途站上車或直接排總站。'
-            }
-        ]
-    },
-    // --- Salt Lake City ---
-    {
-        id: 'day6',
-        date: '2026/05/25 (一)',
-        city: 'SLC',
-        cityLabel: '鹽湖城',
-        title: '移動日：飛往猶他州',
-        summary: '前往 ACSM 年會舉辦地鹽湖城。',
-        activities: [
-            {
-                time: '09:00',
-                title: '前往 SFO 機場',
-                description: 'Check-out，搭乘 Uber/BART 前往機場。',
-                type: 'transport',
-                iconName: 'Plane'
+                iconName: 'Camera',
+                coordinates: { lat: 37.7786, lng: -122.3893 }
             },
             {
-                time: '12:00',
-                title: '飛往鹽湖城 (SLC)',
-                description: '搭乘國內線 (Delta/United/Southwest)，航程約 2 小時。',
-                type: 'flight',
-                iconName: 'Plane'
+                time: '14:05',
+                title: 'Giants 主場比賽',
+                description: '觀賞舊金山巨人隊 MLB 賽事。',
+                type: 'other',
+                iconName: 'Trophy',
+                tips: '【MUST BOOK EARLY】注意包包尺寸限制。'
             },
             {
-                time: '15:30',
-                title: '抵達 SLC & 交通',
-                description: '搭乘 TRAX 輕軌 (綠線) 直接從機場到市中心。',
-                type: 'transport',
-                iconName: 'Train',
-                tips: '鹽湖城機場離市區很近，輕軌非常方便且便宜。',
-                coordinates: { lat: 40.7899, lng: -111.9791 }
-            },
-            {
-                time: '17:00',
-                title: '飯店 Check-in',
-                description: '入住 Salt Palace Convention Center 附近飯店。',
-                type: 'hotel',
-                iconName: 'Moon'
-            }
-        ]
-    },
-    {
-        id: 'day7',
-        date: '2026/05/26 (二)',
-        city: 'SLC',
-        cityLabel: '鹽湖城',
-        title: 'ACSM 年會 Day 1',
-        summary: '會議註冊、開幕式與講座。',
-        activities: [
-            {
-                time: '08:00',
-                title: '會議報到',
-                description: '前往 Salt Palace Convention Center 領取識別證。',
-                type: 'conference',
-                iconName: 'Briefcase',
-                coordinates: { lat: 40.7670, lng: -111.8965 }
-            },
-            {
-                time: '09:00',
-                title: '專題演講 & 議程',
-                description: '參加感興趣的學術場次。',
-                type: 'conference',
-                iconName: 'Briefcase'
-            },
-            {
-                time: '17:00',
-                title: '聖殿廣場 (Temple Square)',
-                description: '會後步行參觀摩門教總部建築群。',
-                type: 'sightseeing',
-                iconName: 'Camera'
-            },
-            {
-                time: '19:00',
-                title: 'City Creek Center 晚餐',
-                description: '會場正對面的購物中心，有美食街與餐廳。',
+                time: '18:30',
+                title: '晚餐',
+                description: 'Mission Bay 或返回 North Beach 用餐。',
                 type: 'food',
                 iconName: 'Utensils'
             }
         ]
     },
+    // --- Day 6 ---
     {
-        id: 'day8',
-        date: '2026/05/27 (三)',
-        city: 'SLC',
-        cityLabel: '鹽湖城',
-        title: 'ACSM 年會 Day 2',
-        summary: '全天會議行程。',
+        id: 'day6',
+        date: '2026/05/26',
+        city: 'SF',
+        cityLabel: '舊金山',
+        title: '對岸風情與經典夕陽',
+        summary: 'Sausalito 小鎮漫遊、科學博物館與經典大橋拍攝。\n\n🌤️ 天氣/穿搭：黃昏風霧更明顯；防風保暖＋好走鞋＋擦拭布。',
         activities: [
             {
-                time: '08:30',
-                title: '學術會議',
-                description: '海報發表 (Poster Session) 或專題研討。',
-                type: 'conference',
-                iconName: 'Briefcase'
+                time: '09:30',
+                title: '前往 Ferry Building',
+                description: '準備搭乘渡輪。',
+                type: 'transport',
+                iconName: 'MapPin'
             },
             {
-                time: '12:00',
-                title: '交流午餐',
-                description: '與同行學者交流。',
+                time: '10:30',
+                title: 'Sausalito 小鎮',
+                description: '搭渡輪抵達，享受悠閒的半日遊。',
+                type: 'sightseeing',
+                iconName: 'Sun',
+                coordinates: { lat: 37.8591, lng: -122.4853 },
+                tips: '【CAN BOOK LATER】可刷 Clipper Card。'
+            },
+            {
+                time: '14:15',
+                title: 'Exploratorium',
+                description: '參觀探索館 (Pier 15)，體驗科學互動展品。',
+                type: 'sightseeing',
+                iconName: 'Lightbulb',
+                tips: '【CAN BOOK LATER】'
+            },
+            {
+                time: '17:00',
+                title: '補給與晚餐',
+                description: '簡單用餐，準備前往拍攝夕陽。',
                 type: 'food',
-                iconName: 'Coffee'
+                iconName: 'Utensils'
             },
             {
-                time: '18:00',
-                title: '猶他州議會大廈',
-                description: '搭 Uber 前往 Utah State Capitol 看夕陽與市景。',
+                time: '18:45',
+                title: 'Marshall’s Beach 夕陽',
+                description: '拍攝金門大橋夕陽的絕佳（但也較隱密）的地點。',
                 type: 'sightseeing',
                 iconName: 'Camera',
-                tips: '議會大廈位於山坡上，俯瞰鹽湖城視野極佳。',
-                coordinates: { lat: 40.7774, lng: -111.8882 }
-            }
-        ]
-    },
-    {
-        id: 'day9',
-        date: '2026/05/28 (四)',
-        city: 'SLC',
-        cityLabel: '鹽湖城',
-        title: 'ACSM 年會 Day 3',
-        summary: '全天會議行程。',
-        activities: [
-            {
-                time: '09:00',
-                title: '學術會議',
-                description: '持續參與議程。',
-                type: 'conference',
-                iconName: 'Briefcase'
+                coordinates: { lat: 37.8025, lng: -122.4800 },
+                tips: '需步行一段沙灘與步道，注意潮汐與保暖。'
             },
             {
-                time: '19:00',
-                title: '社交晚宴 (Gala) 或自由活動',
-                description: '若有官方晚宴則參加，否則可去 Red Iguana 吃著名的墨西哥菜。',
-                type: 'food',
-                iconName: 'Utensils',
-                tips: 'Red Iguana 生意極好，建議提早訂位或避開尖峰。'
-            }
-        ]
-    },
-    {
-        id: 'day10',
-        date: '2026/05/29 (五)',
-        city: 'SLC',
-        cityLabel: '鹽湖城',
-        title: '年會閉幕',
-        summary: '最後半天會議，準備前往下一站。',
-        activities: [
-            {
-                time: '09:00',
-                title: '最後議程',
-                description: '把握最後的發表會與展覽攤位 (Expo)。',
-                type: 'conference',
-                iconName: 'Briefcase'
-            },
-            {
-                time: '14:00',
-                title: '市區漫遊',
-                description: '參觀 The Leonardo 博物館或公共圖書館。',
+                time: '21:15',
+                title: 'California St 夜拍',
+                description: '拍攝經典的斜坡街道與纜車夜景。',
                 type: 'sightseeing',
                 iconName: 'Camera'
-            },
-            {
-                time: '18:00',
-                title: '整理行李',
-                description: '準備明天飛往海邊。',
-                type: 'hotel',
-                iconName: 'CheckSquare'
             }
         ]
     },
-    // --- San Diego ---
+    // --- Day 7 ---
     {
-        id: 'day11',
-        date: '2026/05/30 (六)',
-        city: 'SAN',
-        cityLabel: '聖地亞哥',
-        title: '飛往陽光海岸',
-        summary: '抵達聖地亞哥，感受瓦斯燈街區夜生活。',
+        id: 'day7',
+        date: '2026/05/27',
+        city: 'SLC',
+        cityLabel: '鹽湖城',
+        title: '移動日：飛往猶他',
+        summary: '告別舊金山，飛往鹽湖城準備參加年會。\n\n🌤️ 天氣/穿搭：SLC 白天偏暖、早晚涼；短袖＋薄外套；防曬。',
         activities: [
             {
-                time: '09:00',
-                title: '前往 SLC 機場',
-                description: '搭乘 TRAX 綠線前往機場。',
+                time: '07:30',
+                title: 'Check-out',
+                description: '辦理退房手續。',
+                type: 'hotel',
+                iconName: 'CheckSquare'
+            },
+            {
+                time: '08:00',
+                title: '前往 SFO 機場',
+                description: '搭乘 BART 或 Uber 前往機場。',
                 type: 'transport',
                 iconName: 'Train'
             },
             {
-                time: '11:00',
-                title: '飛往聖地亞哥 (SAN)',
-                description: '搭乘 Delta/Southwest，航程約 2 小時。',
+                time: '10:00', // Approximate
+                title: '飛往鹽湖城 (SLC)',
+                description: '搭乘國內線航班前往 SLC (約 2 小時航程)。',
                 type: 'flight',
-                iconName: 'Plane'
+                iconName: 'Plane',
+                tips: '【MUST BOOK EARLY】建議選擇中午前後抵達的航班。'
             },
             {
-                time: '13:00',
-                title: '抵達 SAN',
-                description: '機場就在市區旁。搭乘 Uber 或 992 公車前往飯店。',
-                type: 'transport',
+                time: '15:30',
+                title: '市區 Check-in',
+                description: '抵達 SLC 市區，入住 Salt Palace 附近飯店。',
+                type: 'hotel',
                 iconName: 'MapPin',
-                tips: '建議住 Downtown 或 Little Italy 區域，交通方便。',
-                coordinates: { lat: 32.7338, lng: -117.1933 }
+                coordinates: { lat: 40.7670, lng: -111.8965 }
             },
             {
                 time: '18:00',
-                title: 'Gaslamp Quarter',
-                description: '瓦斯燈街區晚餐與散步，感受復古建築與熱鬧酒吧。',
-                type: 'food',
-                iconName: 'Utensils',
-                coordinates: { lat: 32.7114, lng: -117.1599 }
-            },
+                title: 'City Creek Center',
+                description: '市區散步與晚餐，就在會場對面。',
+                type: 'sightseeing',
+                iconName: 'ShoppingBag'
+            }
         ]
     },
+    // --- Day 8 ---
     {
-        id: 'day12',
-        date: '2026/05/31 (日)',
-        city: 'SAN',
-        cityLabel: '聖地亞哥',
-        title: '巴爾波亞與動物園',
-        summary: '探索全美最大的城市文化公園與世界級動物園。',
+        id: 'day8',
+        date: '2026/05/28',
+        city: 'SLC',
+        cityLabel: '鹽湖城',
+        title: 'ACSM 年會 Day 1',
+        summary: '全天學術會議。\n\n🌤️ 天氣/穿搭：室內為主，外出日照強，帶水防曬。',
+        activities: [
+            {
+                time: '08:30',
+                title: '前往 Salt Palace',
+                description: '步行前往會議中心。',
+                type: 'transport',
+                iconName: 'MapPin'
+            },
+            {
+                time: '09:00',
+                title: 'ACSM 會議 / 報告',
+                description: '參加專題演講、海報發表。',
+                type: 'conference',
+                iconName: 'Briefcase'
+            },
+            {
+                time: '18:00',
+                title: '聖殿廣場 / 晚餐',
+                description: '會後參觀 Temple Square 或自由活動。',
+                type: 'sightseeing',
+                iconName: 'Camera',
+                coordinates: { lat: 40.7704, lng: -111.8919 }
+            }
+        ]
+    },
+    // --- Day 9 ---
+    {
+        id: 'day9',
+        date: '2026/05/29',
+        city: 'SLC',
+        cityLabel: '鹽湖城',
+        title: 'ACSM 年會 Day 2',
+        summary: '全天會議，晚上打包準備回程。\n\n🌤️ 天氣/穿搭：可能短暫陣雨；輕雨具備案。',
         activities: [
             {
                 time: '09:00',
-                title: '聖地亞哥動物園 (San Diego Zoo)',
-                description: '世界知名動物園，必搭空中纜車 (Skyfari)。',
-                type: 'sightseeing',
-                iconName: 'Camera',
-                location: '2920 Zoo Dr, San Diego',
-                tips: '園區有坡度，建議穿好走的鞋。',
-                coordinates: { lat: 32.7353, lng: -117.1490 }
-            },
-            {
-                time: '14:00',
-                title: '巴爾波亞公園 (Balboa Park)',
-                description: '參觀西班牙風格建築、植物園與博物館群。',
-                type: 'sightseeing',
-                iconName: 'Sun'
+                title: 'ACSM 會議 / 報告',
+                description: '持續參與議程與交流。',
+                type: 'conference',
+                iconName: 'Briefcase'
             },
             {
                 time: '18:00',
-                title: 'Little Italy 晚餐',
-                description: '前往小義大利區享用道地義式料理。',
-                type: 'food',
-                iconName: 'Utensils'
-            }
-        ]
-    },
-    {
-        id: 'day13',
-        date: '2026/06/01 (一)',
-        city: 'SAN',
-        cityLabel: '聖地亞哥',
-        title: '航母與勝利之吻',
-        summary: '軍事迷朝聖中途島號，海港村散步。',
-        activities: [
-            {
-                time: '10:00',
-                title: '中途島號博物館 (USS Midway)',
-                description: '參觀退役航空母艦、戰機與甲板。',
-                type: 'sightseeing',
-                iconName: 'Briefcase',
-                tips: '門票包含語音導覽，記得領取。',
-                coordinates: { lat: 32.7137, lng: -117.1751 }
-            },
-            {
-                time: '13:00',
-                title: '勝利之吻雕像',
-                description: '就在航母旁邊的公園，必拍打卡點。',
-                type: 'sightseeing',
-                iconName: 'Camera'
-            },
-            {
-                time: '14:00',
-                title: 'Seaport Village',
-                description: '沿著海灣散步，逛特色小店，看海景。',
-                type: 'sightseeing',
-                iconName: 'Sun'
-            }
-        ]
-    },
-    {
-        id: 'day14',
-        date: '2026/06/02 (二)',
-        city: 'SAN',
-        cityLabel: '聖地亞哥',
-        title: '拉荷亞海豹與夕陽',
-        summary: '前往高級海濱區 La Jolla 看野生海豹。',
-        activities: [
-            {
-                time: '14:00',
-                title: '前往 La Jolla',
-                description: '搭乘 Uber/Lyft 前往 (約 20-30 分鐘)。',
-                type: 'transport',
-                iconName: 'Car'
-            },
-            {
-                time: '15:00',
-                title: 'La Jolla Cove',
-                description: '觀賞躺在沙灘上的海豹與海獅 (請保持距離)。',
-                type: 'sightseeing',
-                iconName: 'Camera'
-            },
-            {
-                time: '18:30',
-                title: '欣賞太平洋夕陽',
-                description: '南加州最美的夕陽景點之一。',
-                type: 'sightseeing',
-                iconName: 'Sun'
-            }
-        ]
-    },
-    {
-        id: 'day15',
-        date: '2026/06/03 (三)',
-        city: 'SAN',
-        cityLabel: '聖地亞哥',
-        title: '科羅納多與老城',
-        summary: '跨海大橋與墨西哥風情老城。',
-        activities: [
-            {
-                time: '10:00',
-                title: '科羅納多島 (Coronado)',
-                description: '搭渡輪或過橋。參觀 Hotel del Coronado。',
-                type: 'sightseeing',
-                iconName: 'Sun',
-                tips: '飯店沙灘非常美，電影《有些喜歡熱》拍攝地。',
-                coordinates: { lat: 32.6859, lng: -117.1831 }
-            },
-            {
-                time: '14:00',
-                title: 'Old Town San Diego',
-                description: '加州發源地，充滿墨西哥風情的歷史公園。',
-                type: 'sightseeing',
-                iconName: 'MapPin',
-                coordinates: { lat: 32.7549, lng: -117.1978 }
-            },
-            {
-                time: '18:00',
-                title: '最後晚餐：墨西哥菜',
-                description: '在 Old Town 享用 Taco 與 Margarita。',
-                type: 'food',
-                iconName: 'Utensils'
-            }
-        ]
-    },
-    // --- Return ---
-    {
-        id: 'day16',
-        date: '2026/06/04 (四)',
-        city: 'LA',
-        cityLabel: '洛杉磯返程',
-        title: '移動至 LAX 返台',
-        summary: '前往洛杉磯國際機場，搭乘星宇航空返家。',
-        activities: [
-            {
-                time: '10:00',
-                title: '退房 & 早餐',
-                description: '享受最後的加州陽光。',
+                title: '晚餐 / 打包',
+                description: '享受在鹽湖城的最後晚餐，整理行李準備明天早起。',
                 type: 'hotel',
+                iconName: 'Utensils'
+            }
+        ]
+    },
+    // --- Day 10 ---
+    {
+        id: 'day10',
+        date: '2026/05/30',
+        city: 'SLC', // Wait, flying back to SF
+        cityLabel: '鹽湖城→舊金山',
+        title: '超保守回程日',
+        summary: '中午前飛回舊金山待命，避免任何意外影響國際段航班。\n\n🌤️ 天氣/穿搭：回到灣區體感變涼；外套留手邊。',
+        activities: [
+            {
+                time: '06:30',
+                title: '起床 & 退房',
+                description: '早起準備前往機場。',
+                type: 'hotel',
+                iconName: 'Sun'
+            },
+            {
+                time: '07:45',
+                title: '前往 SLC 機場',
+                description: '搭乘 Uber 或 TRAX 前往機場。',
+                type: 'transport',
+                iconName: 'Train'
+            },
+            {
+                time: '09:30',
+                title: '飛往舊金山 (SFO)',
+                description: '建議搭乘 09:30-10:30 起飛的航班，務必中午抵達。',
+                type: 'flight',
+                iconName: 'Plane',
+                tips: '【MUST BOOK EARLY】預留充足轉機/緩衝時間。'
+            },
+            {
+                time: '12:00',
+                title: '抵達 SFO / 休息',
+                description: '抵達後不進市區，直接在機場休息或使用機場飯店設施。',
+                type: 'other',
                 iconName: 'Coffee'
             },
             {
-                time: '13:00',
-                title: '移動至洛杉磯 (LAX)',
-                description: '推薦：租車單程還車 (One-way rental) 開往 LAX。',
-                type: 'transport',
-                iconName: 'Car',
-                tips: '車程約 2.5-3 小時，但洛杉磯交通極易堵塞，務必預留 5 小時以上緩衝。'
-            },
+                time: '21:30',
+                title: '辦理登機手續',
+                description: '星宇航空櫃檯報到 (TBIT 航廈)。',
+                type: 'flight',
+                iconName: 'Ticket'
+            }
+        ]
+    },
+    // --- Day 11 ---
+    {
+        id: 'day11',
+        date: '2026/05/31',
+        city: 'SF',
+        cityLabel: '舊金山',
+        title: '平安返航',
+        summary: '搭乘星宇航空返台。\n\n🌤️ 天氣/穿搭：機場/機上偏冷，長袖舒適。',
+        activities: [
             {
-                time: '20:30',
-                title: '抵達 LAX 機場',
-                description: '前往 Tom Bradley 國際航廈 (TBIT) 星宇櫃檯。',
+                time: '00:50',
+                title: 'SFO 起飛',
+                description: '搭乘 JX011 航班飛往台北 (TPE)。',
                 type: 'flight',
                 iconName: 'Plane',
-                tips: '還車後需搭接駁車至航廈，時間要抓寬鬆。',
-                coordinates: { lat: 33.9416, lng: -118.4085 }
-            },
-            {
-                time: '23:50',
-                title: '搭機返台',
-                description: '星宇航空 JX001/JX005 (預計)。',
-                type: 'flight',
-                iconName: 'Plane'
+                tips: 'Save Travels! ✈️'
             }
         ]
     }
 ];
 
 export const checklistItems = [
-    "ESTA 美國電子簽證 (出發前 72 小時申請)",
-    "ACSM 年會註冊確認信",
-    "Apple Park Visitor Center 營業時間確認",
-    "惡魔島船票 (90天前預訂)",
-    "星宇航空選位",
-    "漫遊網卡或 eSIM",
-    "美規插座轉接頭 (電壓 110V 相同，插孔相同)",
-    "保險 (醫療險額度建議足夠)",
-    "個人常備藥品"
+    "預訂：惡魔島船票 (出發前 90 天)",
+    "預訂：巨人隊球票 (MLB)",
+    "預訂：國內線機票 (SFO ⇄ SLC)",
+    "預訂：ACSM 年會註冊",
+    "ESTA 美國電子簽證 (出發前 72 小時)",
+    "網路：漫遊 SIM 卡或 eSIM",
+    "攝影：相機、廣角鏡、長焦鏡、腳架",
+    "衣物：防風外套 (SF)、短袖與薄外套 (SLC)",
+    "其他：美規轉接頭 (同台灣)、個人藥品、保險"
 ];
